@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-
+[RequireComponent(typeof(LineRenderer))]
 public class PlayerActor : MonoBehaviour {
 
 	[Tooltip("Button to tell a car to stop")]
@@ -12,7 +12,13 @@ public class PlayerActor : MonoBehaviour {
 	[Tooltip("MAximum distance of pointer raycast")]
 	[SerializeField] private float m_pointerDistance = 100f;
 
+	LineRenderer m_laserPointer;
+
 	public int Score { get; set; }
+
+	private void Start() {
+		m_laserPointer = GetComponent<LineRenderer>();
+	}
 
 	// Update is called once per frame
 	void Update() {
@@ -20,6 +26,13 @@ public class PlayerActor : MonoBehaviour {
 			StopCar();
 		else if (OVRInput.GetDown(m_goButton))
 			GoCar();
+
+		// line pointer effect
+		Ray pointer = new Ray(transform.position, transform.forward);
+		RaycastHit hit;
+		if (Physics.Raycast(pointer, out hit, m_pointerDistance)) {
+			m_laserPointer.SetPositions(new Vector3[] { transform.position, hit.point });
+		}
 	}
 
 	void StopCar() {
