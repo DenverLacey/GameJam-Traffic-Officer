@@ -48,7 +48,7 @@ public class TrafficManager : MonoBehaviour
 
     private float m_currentSpawnDelay;
 
-    private int stopIndex = 0;
+    private int m_stopIndex = 0;
 
     void Awake()
     {
@@ -77,6 +77,7 @@ public class TrafficManager : MonoBehaviour
         for (int i = 0; i < m_carCap; ++i)
         {
             GameObject carInstance = Instantiate(carPrefab, transform);
+            carInstance.AddComponent<CarData>();
 
             carInstance.SetActive(false);
 
@@ -90,17 +91,23 @@ public class TrafficManager : MonoBehaviour
     {
         Transform carTransform = car.transform;
 
+        // Offset from lane spawn.
         float laneOffset = (m_laneSpawnPoints[laneIndex].position - carTransform.position).magnitude;
+
+        // Index in the stopped car stack.
         int stackPos = (m_laneStopIndices[laneIndex] + 1) - (carIndex + 1);
+
+        // Offset from original stopping point this specific car will stop at.
         float stopOffset = m_laneStopDists[laneIndex] + (stackPos * m_carStopGap);
 
+        // Stops if any car in front of it is stopped and it has reached it's designated stopping point.
         if (carIndex >= m_laneStopIndices[laneIndex] && laneOffset >= stopOffset)
             return;
 
+        // Translate...
         carTransform.Translate(carTransform.forward * m_carSpeed * Time.deltaTime, Space.World);
 
-        Vector3 spawnDiff = m_laneSpawnPoints[laneIndex].position - carTransform.position;
-        if (spawnDiff.sqrMagnitude > 100 * 100)
+        if (laneOffset > 100 * 100)
         {
             car.SetActive(false);
 
@@ -109,35 +116,54 @@ public class TrafficManager : MonoBehaviour
         }
     }
 
+    /*
+    Description: Stop the provided car. Will also stop all other cars behind it.
+    */
+    public void StopCar(GameObject car)
+    {
+        CarData data = car.GetComponent<CarData>();
+
+        // Dont change the stop index if a car ahead has stopped.
+        if (data.IndexInLane >= m_laneStopIndices[data.LaneIndex])
+            return;
+
+        m_laneStopIndices[data.LaneIndex] = data.IndexInLane;
+
+        GameObject carToStop = m_laneList[m_stopIndex][data.IndexInLane];
+
+        m_laneStopDists[m_stopIndex] = (m_laneSpawnPoints[m_stopIndex].position - carToStop.transform.position).magnitude;
+    }
+
+    /*
+    Description: Stop the car at the provided indices. Will also stop other cars behind it.
+    */
+    public void StopCar(int carIndex, int laneIndex)
+    {
+        // Dont change the stop index if a car ahead has stopped.
+        if (carIndex >= m_laneStopIndices[laneIndex])
+            return;
+
+        m_laneStopIndices[laneIndex] = carIndex;
+
+        GameObject carToStop = m_laneList[laneIndex][carIndex];
+
+        m_laneStopDists[m_stopIndex] = (m_laneSpawnPoints[m_stopIndex].position - carToStop.transform.position).magnitude;
+    }
+
+    /*
+    Description: Car provided will resume it's route if it is the front car stopped in the lane.
+    */
+    public void ResumeCar(GameObject car)
+    {
+        CarData data = car.GetComponent<CarData>();
+
+        // Resume car only if it is the front-most stopped car.
+        if (data.IndexInLane == m_laneStopIndices[data.LaneIndex])
+            m_laneStopIndices[data.LaneIndex] = int.MaxValue;
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            --stopIndex;
-
-            if (stopIndex < 0)
-                stopIndex = 0;
-
-            Debug.Log(stopIndex);
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && stopIndex < 3)
-        {
-            ++stopIndex;
-
-            Debug.Log(stopIndex);
-        }
-        
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            m_laneStopIndices[stopIndex] = 0;
-
-            GameObject carToStop = m_laneList[stopIndex][0];
-
-            m_laneStopDists[stopIndex] = (m_laneSpawnPoints[stopIndex].position - carToStop.transform.position).magnitude;
-
-            Debug.Log("Stopping lane" + stopIndex);
-        }
-
         // Spawning
         m_currentSpawnDelay -= Time.deltaTime;
 
@@ -169,6 +195,11 @@ public class TrafficManager : MonoBehaviour
             if (m_maxSpawnDelay < m_minSpawnDelay)
                 m_maxSpawnDelay = m_minSpawnDelay;
 
+            CarData data = carToSpawn.GetComponent<CarData>();
+
+            data.LaneIndex = spawnIndex;
+            data.IndexInLane = m_laneList[spawnIndex].Count;
+
             // Add to lane.
             m_laneList[spawnIndex].Add(carToSpawn);
 
@@ -187,6 +218,5 @@ public class TrafficManager : MonoBehaviour
 
         for (int i = 0; i < m_lane4Cars.Count; ++i)
             UpdateCar(m_lane4Cars[i], i, 3);
-
     }
 }
