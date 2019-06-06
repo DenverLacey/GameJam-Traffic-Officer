@@ -14,18 +14,27 @@ public class PlayerActor : MonoBehaviour {
 
 	LineRenderer m_laserPointer;
 
+	TrafficManager m_trafficManager;
+
 	public int Score { get; set; }
 
+	/// <summary>
+	/// Gets LineRenderer component and reference to traffic manager.
+	/// </summary>
 	private void Start() {
 		m_laserPointer = GetComponent<LineRenderer>();
+		m_trafficManager = FindObjectOfType<TrafficManager>();
 	}
 
-	// Update is called once per frame
+	/// <summary>
+	/// Responds to player input and updates line renderer effect.
+	/// </summary>
 	void Update() {
+		// Button inputs
 		if (OVRInput.GetDown(m_stopButton))
 			StopCar();
 		else if (OVRInput.GetDown(m_goButton))
-			GoCar();
+			ResumeCar();
 
 		// line pointer effect
 		Ray pointer = new Ray(transform.position, transform.forward);
@@ -39,24 +48,32 @@ public class PlayerActor : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Stops car that player is pointing at. If player isn't pointing at a car
+	/// it does nothing.
+	/// </summary>
 	void StopCar() {
 		Ray ray = new Ray(transform.position, transform.forward);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit, m_pointerDistance)) {
 			if (hit.collider.tag == "Car")
             {
-                Debug.Log("NO CAR!!!");
+				m_trafficManager.StopCar(hit.collider.gameObject);
             }
 		}
 	}
 
-	void GoCar() {
+	/// <summary>
+	/// Resumes car that player is pointing at. If player isn't pointing at a car
+	/// it does nothing.
+	/// </summary>
+	void ResumeCar() {
 		Ray ray = new Ray(transform.position, transform.forward);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit, m_pointerDistance)) {
 			if (hit.collider.tag == "Car")
             {
-                Debug.Log("GO CAR!!!");
+				m_trafficManager.ResumeCar(hit.collider.gameObject);
             }
 		}
 	}
