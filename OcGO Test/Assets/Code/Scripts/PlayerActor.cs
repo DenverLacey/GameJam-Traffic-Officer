@@ -33,6 +33,10 @@ public class PlayerActor : MonoBehaviour {
 		if (Physics.Raycast(pointer, out hit, m_pointerDistance)) {
 			m_laserPointer.SetPositions(new Vector3[] { transform.position, hit.point });
 		}
+		else {
+			Vector3 laserEnd = transform.position + transform.forward * m_pointerDistance;
+			m_laserPointer.SetPositions(new Vector3[] { transform.position, laserEnd });
+		}
 	}
 
 	void StopCar() {
