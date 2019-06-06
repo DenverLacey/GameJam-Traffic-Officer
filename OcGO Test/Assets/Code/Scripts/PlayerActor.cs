@@ -26,10 +26,10 @@ public class PlayerActor : MonoBehaviour {
 		Ray ray = new Ray(transform.position, transform.forward);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit, m_pointerDistance)) {
-			//Car = maybeCar = hit.collider.GetComponent<Car>();
-			//if (maybeCar != null) {
-			//	maybeCar.Stop();
-			//}
+			if (hit.collider.tag == "Car")
+            {
+                Debug.Log("NO CAR!!!");
+            }
 		}
 	}
 
@@ -37,10 +37,10 @@ public class PlayerActor : MonoBehaviour {
 		Ray ray = new Ray(transform.position, transform.forward);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit, m_pointerDistance)) {
-			//Car = maybeCar = hit.collider.GetComponent<Car>();
-			//if (maybeCar != null) {
-			//	maybeCar.Go();
-			//}
+			if (hit.collider.tag == "Car")
+            {
+                Debug.Log("GO CAR!!!");
+            }
 		}
 	}
 }
