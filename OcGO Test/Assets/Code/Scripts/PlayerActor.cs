@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(PlayerMenuInteraction))]
 public class PlayerActor : MonoBehaviour {
 
 	[Tooltip("Button to tell a car to stop")]
@@ -10,19 +11,18 @@ public class PlayerActor : MonoBehaviour {
 	[SerializeField] private OVRInput.Button m_goButton = OVRInput.Button.PrimaryTouchpad;
 
 	[Tooltip("MAximum distance of pointer raycast")]
-	[SerializeField] private float m_pointerDistance = 100f;
-
-	LineRenderer m_laserPointer;
+	private float m_pointerDistance = 100f;
 
 	TrafficManager m_trafficManager;
 
 	public int Score { get; set; }
+	public float PointerDistance { get => m_pointerDistance; }
+	public OVRInput.Button StopButton { get => m_stopButton; }
 
 	/// <summary>
 	/// Gets LineRenderer component and reference to traffic manager.
 	/// </summary>
 	private void Start() {
-		m_laserPointer = GetComponent<LineRenderer>();
 		m_trafficManager = FindObjectOfType<TrafficManager>();
 	}
 
@@ -35,17 +35,6 @@ public class PlayerActor : MonoBehaviour {
 			StopCar();
 		else if (OVRInput.GetDown(m_goButton))
 			ResumeCar();
-
-		// line pointer effect
-		Ray pointer = new Ray(transform.position, transform.forward);
-		RaycastHit hit;
-		if (Physics.Raycast(pointer, out hit, m_pointerDistance)) {
-			m_laserPointer.SetPositions(new Vector3[] { transform.position, hit.point });
-		}
-		else {
-			Vector3 laserEnd = transform.position + transform.forward * m_pointerDistance;
-			m_laserPointer.SetPositions(new Vector3[] { transform.position, laserEnd });
-		}
 	}
 
 	/// <summary>
