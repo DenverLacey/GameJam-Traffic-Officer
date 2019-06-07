@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMenuInteraction : MonoBehaviour {
 
@@ -9,14 +10,20 @@ public class PlayerMenuInteraction : MonoBehaviour {
 
 	OVRInput.Button m_button;
 
-    // Start is called before the first frame update
+    /// <summary>
+	/// Gets pointer distance and stop button from PlayerActor
+	/// and gets LineRenderer component.
+	/// </summary>
     void Start() {
 		m_pointerDistance = GetComponent<PlayerActor>().PointerDistance;
 		m_button = GetComponent<PlayerActor>().StopButton;
 		m_laserPointer = GetComponent<LineRenderer>();
     }
 
-    // Update is called once per frame
+    /// <summary>
+	/// Sends poiting raycast and handles clicking
+	/// on traffic light buttons.
+	/// </summary>
     void Update() {
 		// line pointer effect
 		Ray pointer = new Ray(transform.position, transform.forward);

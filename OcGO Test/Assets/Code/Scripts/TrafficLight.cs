@@ -13,13 +13,18 @@ public class TrafficLight : MonoBehaviour {
 	private Material m_mat;
 	private bool m_pointedAt;
 
-    // Start is called before the first frame update
+    /// <summary>
+	/// Finds reference to main menu object and
+	/// gets objects material.
+	/// </summary>
     void Start() {
 		m_mainMenu = FindObjectOfType<MainMenu>();
 		m_mat = GetComponent<MeshRenderer>().material;
     }
 
-    // Update is called once per frame
+    /// <summary>
+	/// Turns emission on and off based on m_pointedAt.
+	/// </summary>
     void LateUpdate() {
         if (m_pointedAt) {
 			m_mat.EnableKeyword("_EMISSION");
@@ -30,10 +35,16 @@ public class TrafficLight : MonoBehaviour {
 		m_pointedAt = false;
     }
 
+	/// <summary>
+	/// Sets m_pointedAt to true.
+	/// </summary>
 	public void OnPointedAt() {
 		m_pointedAt = true;
 	}
 
+	/// <summary>
+	/// Invokes OnClicked event.
+	/// </summary>
 	public void OnClicked() {
 		m_onClicked.Invoke();
 	}
