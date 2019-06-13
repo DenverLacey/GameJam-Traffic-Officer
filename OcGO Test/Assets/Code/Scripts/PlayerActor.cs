@@ -13,18 +13,9 @@ public class PlayerActor : MonoBehaviour {
 	[Tooltip("MAximum distance of pointer raycast")]
 	private float m_pointerDistance = 100f;
 
-	TrafficManager m_trafficManager;
-
 	public int Score { get; set; }
 	public float PointerDistance { get => m_pointerDistance; }
 	public OVRInput.Button StopButton { get => m_stopButton; }
-
-	/// <summary>
-	/// Gets LineRenderer component and reference to traffic manager.
-	/// </summary>
-	private void Start() {
-		m_trafficManager = FindObjectOfType<TrafficManager>();
-	}
 
 	/// <summary>
 	/// Responds to player input and updates line renderer effect.
@@ -47,7 +38,7 @@ public class PlayerActor : MonoBehaviour {
 		if (Physics.Raycast(ray, out hit, m_pointerDistance)) {
 			if (hit.collider.tag == "Car")
             {
-				m_trafficManager.StopCar(hit.collider.gameObject);
+				hit.collider.GetComponent<CarActor>().Stop();
             }
 		}
 	}
@@ -62,7 +53,7 @@ public class PlayerActor : MonoBehaviour {
 		if (Physics.Raycast(ray, out hit, m_pointerDistance)) {
 			if (hit.collider.tag == "Car")
             {
-				m_trafficManager.ResumeCar(hit.collider.gameObject);
+				hit.collider.GetComponent<CarActor>().Resume();
             }
 		}
 	}

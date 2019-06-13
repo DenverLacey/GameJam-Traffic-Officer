@@ -8,6 +8,7 @@ public class CarActor : MonoBehaviour
     public int Lane { get; set; }
     public float StopDistance { get; set; }
     public float StopTime { get; set; }
+	public bool HasCrashed { get; private set; }
 
     private float m_stopTimer;
     private bool m_stopped;
@@ -64,4 +65,15 @@ public class CarActor : MonoBehaviour
     {
         m_stopped = false;
     }
+
+	private void OnTriggerEnter(Collider other) {
+		if (other.tag == "Car") {
+			CarActor car = other.GetComponent<CarActor>();
+			if (car.Lane != Lane) {
+				// collision occured
+				car.HasCrashed = true;
+				HasCrashed = true;
+			}
+		}
+	}
 }
