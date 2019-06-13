@@ -93,6 +93,10 @@ public class CarManager : MonoBehaviour
 	/// </summary>
     void Update()
     {
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			GameRunning = true;
+		}
+
 		if (!GameRunning)
 			return;
 
