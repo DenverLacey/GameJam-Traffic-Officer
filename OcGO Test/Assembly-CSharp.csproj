@@ -60,8 +60,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Code\Scripts\CarActor.cs" />
     <Compile Include="Assets\Code\Scripts\CarData.cs" />
+    <Compile Include="Assets\Code\Scripts\CarManager.cs" />
+    <Compile Include="Assets\Code\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Code\Scripts\PlayerActor.cs" />
+    <Compile Include="Assets\Code\Scripts\PlayerMenuInteraction.cs" />
+    <Compile Include="Assets\Code\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\Code\Scripts\TrafficManager.cs" />
     <Compile Include="Assets\Code\Scripts\VRInput.cs" />
     <Compile Include="Assets\Code\Scripts\VRRaycaster.cs" />

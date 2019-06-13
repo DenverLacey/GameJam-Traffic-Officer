@@ -30,6 +30,9 @@ public class TrafficManager : MonoBehaviour
     public float m_carSpeedIncrease = 0.3f;
     public float m_speedLimit = 40.0f;
 
+    [Tooltip("Duration the car will remain stopped, in seconds.")]
+    public float m_carStopTime = 3.0f;
+
     [Tooltip("Distance between cars when they are stopped and stacked.")]
     public float m_carStopGap = 7.0f;
 
@@ -107,7 +110,7 @@ public class TrafficManager : MonoBehaviour
 
 			carData.StopTime += Time.deltaTime;
 
-			if(carData.StopTime >= 0.5f)
+			if(carData.StopTime >= m_carStopTime)
 			{
 				carData.StopTime = 0.0f;
 				ResumeCar(carData);
