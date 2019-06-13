@@ -18,11 +18,17 @@ public class MainMenu : MonoBehaviour {
 	private bool m_greenEmissions;
 	private bool m_redEmissions;
 
+	/// <summary>
+	/// Gets reference to green light and red light materials.
+	/// </summary>
 	private void Start() {
 		m_greenMat = m_greenLight.GetComponent<MeshRenderer>().material;
 		m_redMat = m_redLight.GetComponent<MeshRenderer>().material;
 	}
 
+	/// <summary>
+	/// Turns green light on and off
+	/// </summary>
 	public void ChangeGreenEmissionsState() {
 		if (m_greenEmissions) {
 			m_greenMat.DisableKeyword("_EMISSION");
@@ -34,6 +40,9 @@ public class MainMenu : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Turns red light on and off
+	/// </summary>
 	public void ChangeRedEmissionsState() {
 		if (m_greenEmissions) {
 			m_redMat.DisableKeyword("_EMISSION");
@@ -45,18 +54,21 @@ public class MainMenu : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Is called when green light is pressed
+	/// </summary>
 	public void OnGreenPressed() {
 		// start game
-		Debug.Log("START GAME!");
+		FindObjectOfType<CarManager>().GameRunning = true;
 
-		// destroy text objects
-		foreach (var t in m_textObjects) {
-			Destroy(t, Time.deltaTime);
-		}
+		// deactivate text mesh
+		m_textObjects[1].gameObject.SetActive(false);
 	}
 
+	/// <summary>
+	/// Is called when red light is called
+	/// </summary>
 	public void OnRedPressed() {
-		Debug.Log("QUIT GAME!");
 		Application.Quit();
 	}
 }

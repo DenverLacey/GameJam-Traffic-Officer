@@ -50,7 +50,11 @@ public class CarManager : MonoBehaviour
 	private float m_currentSpawnDelay;
 	private float m_spawnTimer;
 
-    // Start is called before the first frame update
+	public bool GameRunning { get; set; }
+
+    /// <summary>
+	/// Creates object pool for all cars, initialises all variables
+	/// </summary>
     void Start()
     {
         // create object pool for all needed cars
@@ -80,11 +84,18 @@ public class CarManager : MonoBehaviour
 		// set up spawn timers and delays
 		m_currentSpawnDelay = Random.Range(m_minSpawnDelay, m_maxSpawnDelay);
 		m_spawnTimer = 0.0f;
+
+		GameRunning = false;
     }
 
-    // Update is called once per frame
+    /// <summary>
+	/// Spwans cars, detects if car has made it the end of its lane
+	/// </summary>
     void Update()
     {
+		if (!GameRunning)
+			return;
+
 		// update timer
 		m_spawnTimer += Time.deltaTime;
 
@@ -139,6 +150,12 @@ public class CarManager : MonoBehaviour
 		m_activeCars.Add(car);
 	}
 
+	/// <summary>
+	/// Deactives car object and moves it to queue of inactive cars
+	/// </summary>
+	/// <param name="car">
+	/// The car that is being deactivated
+	/// </param>
 	void DeactivateCar(CarActor car) {
 		// remove car from active list
 		m_activeCars.Remove(car);
