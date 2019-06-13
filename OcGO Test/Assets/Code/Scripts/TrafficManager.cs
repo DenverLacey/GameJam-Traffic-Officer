@@ -92,7 +92,7 @@ public class TrafficManager : MonoBehaviour
         Transform carTransform = car.transform;
 
         // Offset from lane spawn.
-        float laneOffset = (m_laneSpawnPoints[laneIndex].position - carTransform.position).magnitude;
+        float laneOffset = (m_laneSpawnPoints[laneIndex].position - carTransform.position).sqrMagnitude;
 
         // Index in the stopped car stack.
         int stackPos = (m_laneStopIndices[laneIndex] + 1) - (carIndex + 1);
@@ -100,9 +100,22 @@ public class TrafficManager : MonoBehaviour
         // Offset from original stopping point this specific car will stop at.
         float stopOffset = m_laneStopDists[laneIndex] + (stackPos * m_carStopGap);
 
-        // Stops if any car in front of it is stopped and it has reached it's designated stopping point.
-        if (carIndex >= m_laneStopIndices[laneIndex] && laneOffset >= stopOffset)
-            return;
+		// Stops if any car in front of it is stopped and it has reached it's designated stopping point.
+		if (carIndex >= m_laneStopIndices[laneIndex] && laneOffset >= stopOffset) 
+		{
+			CarData carData = car.GetComponent<CarData>();
+
+			carData.StopTime += Time.deltaTime;
+
+			if(carData.StopTime >= 0.5f)
+			{
+				carData.StopTime = 0.0f;
+				ResumeCar(carData);
+			}
+
+			return;
+		}
+
 
         // Translate...
         carTransform.Translate(carTransform.forward * m_carSpeed * Time.deltaTime, Space.World);
@@ -162,7 +175,17 @@ public class TrafficManager : MonoBehaviour
             m_laneStopIndices[data.LaneIndex] = int.MaxValue;
     }
 
-    void Update()
+	/*
+    Description: Car provided will resume it's route if it is the front car stopped in the lane.
+    */
+	public void ResumeCar(CarData car) 
+	{
+		// Resume car only if it is the front-most stopped car.
+		if (car.IndexInLane == m_laneStopIndices[car.LaneIndex])
+			m_laneStopIndices[car.LaneIndex] = int.MaxValue;
+	}
+
+	void Update()
     {
         // Spawning
         m_currentSpawnDelay -= Time.deltaTime;
