@@ -6,12 +6,22 @@ using UnityEngine.Events;
 [RequireComponent(typeof(MeshRenderer))]
 public class TrafficLight : MonoBehaviour {
 
+	[System.Serializable]
+	struct LightMat {
+		public Material onMat;
+		public Material offMat;
+	};
+
+	[Tooltip("On and Off materials")]
+	[SerializeField] private LightMat m_mats;
+
 	[Tooltip("What happens when traffic light is clicked")]
 	[SerializeField] UnityEvent m_onClicked;
 
 	private MainMenu m_mainMenu;
-	private Material m_mat;
 	private bool m_pointedAt;
+
+	private MeshRenderer m_renderer;
 
     /// <summary>
 	/// Finds reference to main menu object and
@@ -19,7 +29,7 @@ public class TrafficLight : MonoBehaviour {
 	/// </summary>
     void Start() {
 		m_mainMenu = FindObjectOfType<MainMenu>();
-		m_mat = GetComponent<MeshRenderer>().material;
+		m_renderer = GetComponent<MeshRenderer>();
     }
 
     /// <summary>
@@ -27,10 +37,10 @@ public class TrafficLight : MonoBehaviour {
 	/// </summary>
     void LateUpdate() {
         if (m_pointedAt) {
-			m_mat.EnableKeyword("_EMISSION");
+			m_renderer.material = m_mats.onMat;
 		}
 		else {
-			m_mat.DisableKeyword("_EMISSION");
+			m_renderer.material = m_mats.offMat;
 		}
 		m_pointedAt = false;
     }

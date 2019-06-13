@@ -13,7 +13,6 @@ public class PlayerActor : MonoBehaviour {
 	[Tooltip("MAximum distance of pointer raycast")]
 	private float m_pointerDistance = 100f;
 
-	public int Score { get; set; }
 	public float PointerDistance { get => m_pointerDistance; }
 	public OVRInput.Button StopButton { get => m_stopButton; }
 
