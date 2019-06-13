@@ -18,6 +18,14 @@ public class MainMenu : MonoBehaviour {
 	private bool m_greenEmissions;
 	private bool m_redEmissions;
 
+	public static int Score { get; set; }
+	public static int Bonus {
+		get { return Bonus; }
+		set {
+			Bonus = Mathf.Clamp(value, 0, int.MaxValue);
+		}
+	}
+
 	/// <summary>
 	/// Gets reference to green light and red light materials.
 	/// </summary>
