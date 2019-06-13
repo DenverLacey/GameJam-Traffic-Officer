@@ -13,10 +13,14 @@ public class CarActor : MonoBehaviour
     private float m_stopTimer;
     private bool m_stopped;
 
-    /// <summary>
-    /// Determines if car should move or not. Moves car if it should
-    /// </summary>
-    private void Update()
+	private void OnEnable() {
+		HasCrashed = false;
+	}
+
+	/// <summary>
+	/// Determines if car should move or not. Moves car if it should
+	/// </summary>
+	private void Update()
     {
         // stop car if about to collide with car in same lane
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, StopDistance))

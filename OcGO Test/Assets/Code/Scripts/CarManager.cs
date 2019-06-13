@@ -134,7 +134,7 @@ public class CarManager : MonoBehaviour
 		Vector3 dir = (lane.end.position - lane.start.position).normalized;
 		car.transform.forward = dir;
 
-		// active car
+		// activate car
 		car.gameObject.SetActive(true);
 		m_activeCars.Add(car);
 	}
