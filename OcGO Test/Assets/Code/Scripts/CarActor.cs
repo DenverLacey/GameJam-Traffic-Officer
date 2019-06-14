@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(TextMesh))]
 public class CarActor : MonoBehaviour
 {
     public float Speed { get; set; }
@@ -12,25 +11,11 @@ public class CarActor : MonoBehaviour
 	public bool HasCrashed { get; private set; }
 
 	private bool m_hasCrossed;
-	public bool HasCrossed {
-		get => m_hasCrossed;
-		set {
-			m_hasCrossed = value;
-			m_scoreNotification.text = "+" + MainMenu.ScoreIncrement.ToString();
-			m_scoreNotification.gameObject.SetActive(value);
-		}
-	}
+	public bool HasCrossed { get; set; }
 
     private float m_stopTimer;
     private bool m_stopped;
 	private bool m_waiting;
-
-	private TextMesh m_scoreNotification;
-
-	private void Awake() {
-		m_scoreNotification = GetComponentInChildren<TextMesh>();
-		m_scoreNotification.gameObject.SetActive(false);
-	}
 
 	private void OnEnable() {
 		HasCrashed = false;
