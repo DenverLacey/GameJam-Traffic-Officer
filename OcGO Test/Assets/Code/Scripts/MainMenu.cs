@@ -118,8 +118,6 @@ public class MainMenu : MonoBehaviour {
 
     private void GameStateInit()
     {
-        Debug.Log("Entered game state.");
-        
         m_manager.ManagerRunning = true;
 
         // Set wave to zero.
@@ -133,12 +131,6 @@ public class MainMenu : MonoBehaviour {
 
     private void GameStateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            GameState = EGameState.STATE_GAME_OVER;
-            return;
-        }
-
         m_waveTime -= Time.deltaTime;
 
         if (m_waveTime <= 0.0f)
@@ -163,12 +155,17 @@ public class MainMenu : MonoBehaviour {
         }
 
 		// update UI elements
-		m_textObjects[0].text = m_waveTime.ToString("00.0");
+		m_textObjects[0].text = "Wave " + (CurrentWave + 1).ToString() + ": " + m_waveTime.ToString("00.0");
 		m_textObjects[1].text = Score.ToString();
 
 		// poll input
 		if (OVRInput.GetDown(OVRInput.Button.Back)) {
-			GameState = EGameState.STATE_PAUSED;
+			m_state = EGameState.STATE_PAUSED;
+			PausedInit();
+		}
+		if (Input.GetKeyDown(KeyCode.P)) {
+			m_state = EGameState.STATE_PAUSED;
+			PausedInit();
 		}
 	}
 
@@ -185,8 +182,7 @@ public class MainMenu : MonoBehaviour {
 
     private void GameOverMenuUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-            GameState = EGameState.STATE_MAIN_MENU;
+
     }
 
     private void GameOverExit()
@@ -196,25 +192,19 @@ public class MainMenu : MonoBehaviour {
 
     private void MainMenuInit()
     {
-        Debug.Log("Entered main menu.");
-        
-        m_textObjects[0].gameObject.SetActive(true);
-        m_textObjects[1].gameObject.SetActive(true);
+
     }
 
     private void MainMenuUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            GameState = EGameState.STATE_PLAYING;
-        }
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			GameState = EGameState.STATE_PLAYING;
+		}
     }
 
     private void MainMenuExit()
     {
-        // deactivate text meshes
-        m_textObjects[0].gameObject.SetActive(false);
-        m_textObjects[1].gameObject.SetActive(false);
+
     }
 
 	private void PausedInit() 
@@ -227,7 +217,12 @@ public class MainMenu : MonoBehaviour {
 	private void PausedUpdate() 
 	{
 		if (OVRInput.GetDown(OVRInput.Button.Back)) {
-			GameState = EGameState.STATE_PLAYING;
+			m_state = EGameState.STATE_PLAYING;
+			PausedExit();
+		}
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			m_state = EGameState.STATE_PLAYING;
+			PausedExit();
 		}
 	}
 
@@ -240,15 +235,18 @@ public class MainMenu : MonoBehaviour {
 	/// Is called when light 0 is called
 	/// </summary>
 	public void OnLight0Pressed() {
-		if (m_state == EGameState.STATE_PAUSED || m_state == EGameState.STATE_MAIN_MENU)
+		if (GameState == EGameState.STATE_PAUSED || GameState == EGameState.STATE_MAIN_MENU) {
 			Application.Quit();
+		}
 	}
 
 	/// <summary>
 	/// Is called when light 1 is pressed
 	/// </summary>
 	public void OnLight1Pressed() {
-		// start game
-		GameState = EGameState.STATE_PLAYING;
+		if (GameState != EGameState.STATE_PLAYING) {
+			// start game
+			GameState = EGameState.STATE_PLAYING;
+		}
 	}
 }

@@ -7,8 +7,9 @@ public class CarManager : MonoBehaviour
     [System.Serializable]
     struct Lane
     {
-       public Transform start;
-       public Transform end;
+		public Transform start;
+		public Transform end;
+		public Transform crossing;
     }
 
 	[Header("Manager stuff")]
@@ -154,7 +155,6 @@ public class CarManager : MonoBehaviour
             {
                 // Car has reached the end of the lane.
 				DeactivateCar(m_activeCars[i]);
-                MainMenu.Score += MainMenu.ScoreIncrement;
 			}
             else if(m_activeCars[i].HasCrashed)
             {
@@ -164,6 +164,13 @@ public class CarManager : MonoBehaviour
             }
 			else
             {
+				// if car has made it to crossing
+				if ((m_lanes[m_activeCars[i].Lane].crossing.position - m_activeCars[i].transform.position).sqrMagnitude <= m_despawnDistance * m_despawnDistance &&
+					!m_activeCars[i].HasCrossed) 
+				{
+					MainMenu.Score += MainMenu.ScoreIncrement;
+					m_activeCars[i].HasCrossed = true;
+				}
 				i++;
 			}
 		}
