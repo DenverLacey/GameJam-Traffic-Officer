@@ -18,8 +18,15 @@ public class CarManager : MonoBehaviour
 	[Tooltip("Maximum spawn delay")]
 	[SerializeField] private float m_maxSpawnDelay;
 
-	[Tooltip("How close the car has to be to the end of the lane to despawn")]
+    [Tooltip("Amout the max spawn delay is decremented each spawn.")]
+    [SerializeField] private float m_spawnDelayDecrement;
+
+    [Tooltip("How close the car has to be to the end of the lane to despawn")]
 	[SerializeField] private float m_despawnDistance;
+
+    [Tooltip("Chance for two cars to spawn in one go, setting up a collision.")]
+    [Range(0.0f, 100.0f)]
+    [SerializeField] private float m_doubleSpawnChance;
 
     [Header("Car Stuff")]
     [Tooltip("The car prefab.")]
@@ -47,7 +54,9 @@ public class CarManager : MonoBehaviour
     Queue<CarActor> m_inactiveCars;
 	List<CarActor> m_activeCars;
 
+    private float m_currentCarSpeed;
 	private float m_currentSpawnDelay;
+    private float m_currentMaxSpawnDelay;
 	private float m_spawnTimer;
 
 	public bool GameRunning { get; set; }
@@ -67,6 +76,8 @@ public class CarManager : MonoBehaviour
                 GameObject cobj = Instantiate(m_carPrefab, transform.position, Quaternion.identity);
                 cobj.SetActive(false);
 
+                m_currentCarSpeed = m_carSpeed;
+
                 // set up car's CarActor component
                 CarActor car = cobj.GetComponent<CarActor>();
                 car.Speed = m_carSpeed;
@@ -83,7 +94,11 @@ public class CarManager : MonoBehaviour
 
 		// set up spawn timers and delays
 		m_currentSpawnDelay = Random.Range(m_minSpawnDelay, m_maxSpawnDelay);
+        m_currentMaxSpawnDelay = m_maxSpawnDelay;
 		m_spawnTimer = 0.0f;
+
+        // Set up car speeds.
+        m_currentCarSpeed = m_carSpeed;
 
 		GameRunning = false;
     }
@@ -93,8 +108,9 @@ public class CarManager : MonoBehaviour
 	/// </summary>
     void Update()
     {
-		if (Input.GetKeyDown(KeyCode.Return)) {
-			GameRunning = true;
+		if (Input.GetKeyDown(KeyCode.Return))
+        {
+            FindObjectOfType<MainMenu>().OnGreenPressed();
 		}
 
 		if (!GameRunning)
@@ -103,26 +119,77 @@ public class CarManager : MonoBehaviour
 		// update timer
 		m_spawnTimer += Time.deltaTime;
 
-		if (m_spawnTimer >= m_currentSpawnDelay) {
-			// activate car in random lane
-			int randLane = Random.Range(0, m_lanes.Length);
-			ActivateCarInLane(randLane);
+		if (m_spawnTimer >= m_currentSpawnDelay)
+        {
+            float doubleSpawnVal = Random.Range(0.0f, 100.0f);
 
-			// reset timers and delays
-			m_currentSpawnDelay = Random.Range(m_minSpawnDelay, m_maxSpawnDelay);
+            // Pick random lane.
+            int randLane = Random.Range(0, m_lanes.Length);
+
+            if (doubleSpawnVal < m_doubleSpawnChance) // Spawn two cars.
+            {
+                ActivateCarInLane(randLane);
+
+                randLane += 2;
+
+                randLane %= m_lanes.Length;
+
+                ActivateCarInLane(randLane);
+            }
+            else // Spawn one car.
+            {
+                ActivateCarInLane(randLane);
+            }
+
+            // Set new spawn speed.
+            m_currentCarSpeed += m_carSpeedIncrease;
+
+            // Set new max spawn delay.
+            m_currentMaxSpawnDelay = Mathf.Clamp(m_currentMaxSpawnDelay - m_spawnDelayDecrement, m_minSpawnDelay, m_maxSpawnDelay);
+
+            // reset timers and delays
+            m_currentSpawnDelay = Random.Range(m_minSpawnDelay, m_currentMaxSpawnDelay);
 			m_spawnTimer = 0.0f;
 		}
 
 		// deactivate cars that have made it across intersection
-		for (int i = 0; i < m_activeCars.Count;) {
-			// if car has reached end of lane or has crashed
-			if (Vector3.Distance(m_activeCars[i].transform.position, m_lanes[m_activeCars[i].Lane].end.position) <= m_despawnDistance || m_activeCars[i].HasCrashed) {
+		for (int i = 0; i < m_activeCars.Count;)
+        {
+			if (Vector3.Distance(m_activeCars[i].transform.position, m_lanes[m_activeCars[i].Lane].end.position) <= m_despawnDistance)
+            {
+                // Car has reached the end of the lane.
 				DeactivateCar(m_activeCars[i]);
+                MainMenu.Score += MainMenu.ScoreIncrement; // Add to score.
 			}
-			else {
+            else if(m_activeCars[i].HasCrashed)
+            {
+                // Car has crashed.
+                DeactivateCar(m_activeCars[i]);
+                MainMenu.Bonus -= MainMenu.BonusDecrement; // Take from bonus.
+            }
+			else
+            {
 				i++;
 			}
 		}
+    }
+
+    /// <summary>
+    /// Resets all cars managed by this car manager.
+    /// </summary>
+    public void Reset()
+    {
+        foreach (CarActor car in m_activeCars)
+        {
+            m_inactiveCars.Enqueue(car);
+            car.gameObject.SetActive(false);
+        }
+
+        m_activeCars.Clear();
+
+        // Reset speed and spawn delay.
+        m_currentCarSpeed = m_carSpeed;
+        m_currentMaxSpawnDelay = m_maxSpawnDelay;
     }
 
 	/// <summary>
@@ -131,7 +198,8 @@ public class CarManager : MonoBehaviour
 	/// <param name="laneIndex">
 	///	which lane the car
 	/// </param>
-	void ActivateCarInLane(int laneIndex) {
+	void ActivateCarInLane(int laneIndex)
+    {
 		if (m_inactiveCars.Count == 0)
 			return;
 
@@ -140,6 +208,9 @@ public class CarManager : MonoBehaviour
 		
 		// set cars lane
 		car.Lane = laneIndex;
+
+        // Set car speed.
+        car.Speed = m_currentCarSpeed;
 
 		// get lane from array of lanes
 		Lane lane = m_lanes[laneIndex];
@@ -160,7 +231,8 @@ public class CarManager : MonoBehaviour
 	/// <param name="car">
 	/// The car that is being deactivated
 	/// </param>
-	void DeactivateCar(CarActor car) {
+	void DeactivateCar(CarActor car)
+    {
 		// remove car from active list
 		m_activeCars.Remove(car);
 

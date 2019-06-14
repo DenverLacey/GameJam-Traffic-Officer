@@ -195,6 +195,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268b788f64a1d9743b27b6b9161ee3f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_mats:
+    onMat: {fileID: 0}
+    offMat: {fileID: 0}
   m_onClicked:
     m_PersistentCalls:
       m_Calls:
@@ -315,6 +318,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268b788f64a1d9743b27b6b9161ee3f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_mats:
+    onMat: {fileID: 0}
+    offMat: {fileID: 0}
   m_onClicked:
     m_PersistentCalls:
       m_Calls:
@@ -474,3 +480,6 @@ MonoBehaviour:
   m_textObjects:
   - {fileID: 6398916766096400269}
   - {fileID: 1861365189064490358}
+  m_scorePassIncrement: 50
+  m_bonusDecrement: 100
+  m_waveDuration: 60
