@@ -366,6 +366,8 @@ MonoBehaviour:
   m_carSpeedIncrease: 0.5
   m_carStopDistance: 3
   m_carStopTime: 3
+  m_scorePrefab: {fileID: 1087627926524683911, guid: 241700c8b98fbb84e8c0f103431a5e62,
+    type: 3}
   m_carsPerLane: 3
   m_lanes:
   - start: {fileID: 2257481705748037202}
