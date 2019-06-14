@@ -127,9 +127,6 @@ public class MainMenu : MonoBehaviour {
         // Scoring
         Score = 0;
         Bonus = m_initialBonusVal;
-
-		// reset time scale
-		Time.timeScale = 1.0f;
     }
 
     private void GameStateUpdate()
