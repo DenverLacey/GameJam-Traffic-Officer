@@ -108,11 +108,6 @@ public class CarManager : MonoBehaviour
 	/// </summary>
     void Update()
     {
-		if (Input.GetKeyDown(KeyCode.Return))
-        {
-            MainMenu.GameState = MainMenu.EGameState.STATE_PLAYING;
-		}
-
 		if (!ManagerRunning)
 			return;
 

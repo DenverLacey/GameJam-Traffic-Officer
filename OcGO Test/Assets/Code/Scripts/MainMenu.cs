@@ -118,6 +118,8 @@ public class MainMenu : MonoBehaviour {
 
     private void GameStateInit()
     {
+        Debug.Log("Entered game state.");
+        
         m_manager.ManagerRunning = true;
 
         // Set wave to zero.
@@ -131,6 +133,12 @@ public class MainMenu : MonoBehaviour {
 
     private void GameStateUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            GameState = EGameState.STATE_GAME_OVER;
+            return;
+        }
+
         m_waveTime -= Time.deltaTime;
 
         if (m_waveTime <= 0.0f)
@@ -160,7 +168,7 @@ public class MainMenu : MonoBehaviour {
 
 		// poll input
 		if (OVRInput.GetDown(OVRInput.Button.Back)) {
-			m_state = EGameState.STATE_PAUSED;
+			GameState = EGameState.STATE_PAUSED;
 		}
 	}
 
@@ -177,7 +185,8 @@ public class MainMenu : MonoBehaviour {
 
     private void GameOverMenuUpdate()
     {
-
+        if (Input.GetKeyDown(KeyCode.Return))
+            GameState = EGameState.STATE_MAIN_MENU;
     }
 
     private void GameOverExit()
@@ -187,13 +196,18 @@ public class MainMenu : MonoBehaviour {
 
     private void MainMenuInit()
     {
+        Debug.Log("Entered main menu.");
+        
         m_textObjects[0].gameObject.SetActive(true);
         m_textObjects[1].gameObject.SetActive(true);
     }
 
     private void MainMenuUpdate()
     {
-
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            GameState = EGameState.STATE_PLAYING;
+        }
     }
 
     private void MainMenuExit()
@@ -213,7 +227,7 @@ public class MainMenu : MonoBehaviour {
 	private void PausedUpdate() 
 	{
 		if (OVRInput.GetDown(OVRInput.Button.Back)) {
-			m_state = EGameState.STATE_PLAYING;
+			GameState = EGameState.STATE_PLAYING;
 		}
 	}
 
@@ -235,6 +249,6 @@ public class MainMenu : MonoBehaviour {
 	/// </summary>
 	public void OnLight1Pressed() {
 		// start game
-		m_state = EGameState.STATE_PLAYING;
+		GameState = EGameState.STATE_PLAYING;
 	}
 }
