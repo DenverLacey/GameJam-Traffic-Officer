@@ -22,21 +22,6 @@ public class CarActor : MonoBehaviour
 	/// </summary>
 	private void Update()
     {
-        // stop car if about to collide with car in same lane
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, StopDistance))
-        {
-            if (hit.collider.tag == "Car")
-            {
-                CarActor other = hit.collider.GetComponent<CarActor>();
-                if (other.Lane == Lane)
-                    m_stopped = true;
-            }
-        }
-        else
-        {
-            m_stopped = false;
-        }
-
         // if car is stopped, don't move car
         if (m_stopped)
         {
@@ -51,6 +36,21 @@ public class CarActor : MonoBehaviour
 
         // else, move car
         transform.Translate(Vector3.forward * Speed * Time.deltaTime);
+
+        // stop car if about to collide with car in same lane
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, StopDistance))
+        {
+            if (hit.collider.tag == "Car")
+            {
+                CarActor other = hit.collider.GetComponent<CarActor>();
+                if (other.Lane == Lane)
+                    m_stopped = true;
+            }
+        }
+        else
+        {
+            m_stopped = false;
+        }
     }
 
     /// <summary>

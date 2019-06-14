@@ -325,6 +325,9 @@
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/s181299/Desktop/GameJam-Traffic-Officer/OcGO Test/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
+    <Reference Include="PackageManagerAssembly">
+      <HintPath>C:/Users/s181299/Desktop/GameJam-Traffic-Officer/OcGO Test/Assets/EffectExamples/Editor/PackageManagerAssembly/PackageManagerAssembly.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity 2018.3.8f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
     </Reference>
