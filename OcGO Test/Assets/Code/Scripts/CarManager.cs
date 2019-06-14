@@ -59,7 +59,7 @@ public class CarManager : MonoBehaviour
     private float m_currentMaxSpawnDelay;
 	private float m_spawnTimer;
 
-	public bool GameRunning { get; set; }
+	public bool ManagerRunning { get; set; }
 
     /// <summary>
 	/// Creates object pool for all cars, initialises all variables
@@ -100,7 +100,7 @@ public class CarManager : MonoBehaviour
         // Set up car speeds.
         m_currentCarSpeed = m_carSpeed;
 
-		GameRunning = false;
+		ManagerRunning = false;
     }
 
     /// <summary>
@@ -110,10 +110,10 @@ public class CarManager : MonoBehaviour
     {
 		if (Input.GetKeyDown(KeyCode.Return))
         {
-            FindObjectOfType<MainMenu>().OnGreenPressed();
+            MainMenu.GameState = MainMenu.EGameState.STATE_PLAYING;
 		}
 
-		if (!GameRunning)
+		if (!ManagerRunning)
 			return;
 
 		// update timer
@@ -155,11 +155,11 @@ public class CarManager : MonoBehaviour
 		// deactivate cars that have made it across intersection
 		for (int i = 0; i < m_activeCars.Count;)
         {
-			if (Vector3.Distance(m_activeCars[i].transform.position, m_lanes[m_activeCars[i].Lane].end.position) <= m_despawnDistance)
+            if ((m_lanes[m_activeCars[i].Lane].end.position - m_activeCars[i].transform.position).sqrMagnitude <= m_despawnDistance * m_despawnDistance)
             {
                 // Car has reached the end of the lane.
 				DeactivateCar(m_activeCars[i]);
-                MainMenu.Score += MainMenu.ScoreIncrement; // Add to score.
+                MainMenu.Score += MainMenu.ScoreIncrement;
 			}
             else if(m_activeCars[i].HasCrashed)
             {
@@ -177,13 +177,17 @@ public class CarManager : MonoBehaviour
     /// <summary>
     /// Resets all cars managed by this car manager.
     /// </summary>
-    public void Reset()
+    /// <param name="addScores"></param>
+    public void Reset(bool addScores = false)
     {
         foreach (CarActor car in m_activeCars)
         {
             m_inactiveCars.Enqueue(car);
             car.gameObject.SetActive(false);
         }
+
+        if (addScores)
+            MainMenu.Score += m_activeCars.Count * MainMenu.ScoreIncrement;
 
         m_activeCars.Clear();
 

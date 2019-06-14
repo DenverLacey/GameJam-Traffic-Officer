@@ -15,6 +15,9 @@ public class MainMenu : MonoBehaviour {
     [Tooltip("The amount of score gained when a car has made it through the intersection.")]
     [SerializeField] private int m_scorePassIncrement;
 
+    [Tooltip("Initital bonus value.")]
+    [SerializeField] private int m_initialBonusVal;
+
     [Tooltip("Amount of bonus lost when a car crashes.")]
     [SerializeField] private int m_bonusDecrement;
 
@@ -46,6 +49,31 @@ public class MainMenu : MonoBehaviour {
     public static int BonusDecrement { get; private set; }
     public static int CurrentWave { get; set; }
 
+    public enum EGameState
+    {
+        STATE_MAIN_MENU,
+        STATE_PLAYING,
+        STATE_GAME_OVER
+    }
+
+    delegate void StateFunction();
+
+    private static Dictionary<EGameState, StateFunction> m_stateUpdateFuncs;
+    private static Dictionary<EGameState, StateFunction> m_stateInitFuncs;
+    private static Dictionary<EGameState, StateFunction> m_stateExitFuncs;
+
+    private static EGameState m_state;
+
+    public static EGameState GameState
+    {
+        get { return m_state; }
+        set
+        {
+            m_stateExitFuncs[m_state]();
+            m_state = value;
+            m_stateInitFuncs[m_state]();
+        }
+    }
 
 	/// <summary>
 	/// Gets reference to green light and red light materials.
@@ -56,42 +84,118 @@ public class MainMenu : MonoBehaviour {
 
         ScoreIncrement = m_scorePassIncrement;
         BonusDecrement = m_bonusDecrement;
+        Bonus = m_initialBonusVal;
+
+        m_stateUpdateFuncs = new Dictionary<EGameState, StateFunction>();
+        m_stateInitFuncs = new Dictionary<EGameState, StateFunction>();
+        m_stateExitFuncs = new Dictionary<EGameState, StateFunction>();
+
+        m_stateUpdateFuncs[EGameState.STATE_MAIN_MENU] = MainMenuUpdate;
+        m_stateUpdateFuncs[EGameState.STATE_PLAYING] = GameStateUpdate;
+        m_stateUpdateFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuUpdate;
+
+        m_stateInitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuInit;
+        m_stateInitFuncs[EGameState.STATE_PLAYING] = GameStateInit;
+        m_stateInitFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuInit;
+
+        m_stateExitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuExit;
+        m_stateExitFuncs[EGameState.STATE_PLAYING] = GameStateExit;
+        m_stateExitFuncs[EGameState.STATE_GAME_OVER] = GameOverExit;
+
+        GameState = EGameState.STATE_MAIN_MENU;
 
         m_manager = FindObjectOfType<CarManager>();
 	}
 
     private void Update()
     {
-        if (!m_manager.GameRunning)
-            return;
+        m_stateUpdateFuncs[m_state]();
+    }
 
+    private void GameStateInit()
+    {
+        m_manager.ManagerRunning = true;
+
+        // Set wave to zero.
+        CurrentWave = 0;
+        m_waveTime = m_waveDuration;
+
+        // Scoring
+        Score = 0;
+        Bonus = m_initialBonusVal;
+    }
+
+    private void GameStateUpdate()
+    {
         m_waveTime -= Time.deltaTime;
 
-        if(m_waveTime <= 0.0f)
+        if (m_waveTime <= 0.0f)
         {
             ++CurrentWave;
             m_waveTime = m_waveDuration;
 
-            // Reset car manager.
-            m_manager.Reset();
-            
+            // Add bonus to score.
+            Score += Bonus;
+            Bonus = m_initialBonusVal;
 
+            if(CurrentWave > 2)
+            {
+                GameState = EGameState.STATE_GAME_OVER;
+                return;
+            }
+
+            // Reset car manager.
+            m_manager.Reset(true);
+
+            Debug.Log("New wave!");
         }
+    }
+
+    private void GameStateExit()
+    {
+        m_manager.Reset(true);
+        m_manager.ManagerRunning = false;
+    }
+
+    private void GameOverMenuInit()
+    {
+        Debug.Log("Game over!");
+    }
+
+    private void GameOverMenuUpdate()
+    {
+
+    }
+
+    private void GameOverExit()
+    {
+
+    }
+
+    private void MainMenuInit()
+    {
+        m_textObjects[0].gameObject.SetActive(true);
+        m_textObjects[1].gameObject.SetActive(true);
+    }
+
+    private void MainMenuUpdate()
+    {
+
+    }
+
+    private void MainMenuExit()
+    {
+        // deactivate text meshes
+        m_textObjects[0].gameObject.SetActive(false);
+        m_textObjects[1].gameObject.SetActive(false);
     }
 
 	/// <summary>
 	/// Is called when green light is pressed
 	/// </summary>
 	public void OnGreenPressed() {
-		// start game
-		m_manager.GameRunning = true;
-
-        // Set wave to zero.
-        CurrentWave = 0;
-        m_waveTime = m_waveDuration;
-
-        // deactivate text mesh
-        m_textObjects[1].gameObject.SetActive(false);
+        // start game
+        m_state = EGameState.STATE_PLAYING;
 	}
 
 	/// <summary>

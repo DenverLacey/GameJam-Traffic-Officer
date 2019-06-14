@@ -481,5 +481,6 @@ MonoBehaviour:
   - {fileID: 6398916766096400269}
   - {fileID: 1861365189064490358}
   m_scorePassIncrement: 50
+  m_initialBonusVal: 1000
   m_bonusDecrement: 100
   m_waveDuration: 60
