@@ -53,6 +53,7 @@ public class MainMenu : MonoBehaviour {
     {
         STATE_MAIN_MENU,
         STATE_PLAYING,
+		STATE_PAUSED,
         STATE_GAME_OVER
     }
 
@@ -92,15 +93,18 @@ public class MainMenu : MonoBehaviour {
 
         m_stateUpdateFuncs[EGameState.STATE_MAIN_MENU] = MainMenuUpdate;
         m_stateUpdateFuncs[EGameState.STATE_PLAYING] = GameStateUpdate;
+		m_stateUpdateFuncs[EGameState.STATE_PAUSED] = PausedUpdate;
         m_stateUpdateFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuUpdate;
 
         m_stateInitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuInit;
         m_stateInitFuncs[EGameState.STATE_PLAYING] = GameStateInit;
-        m_stateInitFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuInit;
+		m_stateInitFuncs[EGameState.STATE_PAUSED] = PausedInit;
+		m_stateInitFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuInit;
 
         m_stateExitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuExit;
         m_stateExitFuncs[EGameState.STATE_PLAYING] = GameStateExit;
-        m_stateExitFuncs[EGameState.STATE_GAME_OVER] = GameOverExit;
+		m_stateExitFuncs[EGameState.STATE_PAUSED] = PausedExit;
+		m_stateExitFuncs[EGameState.STATE_GAME_OVER] = GameOverExit;
 
         GameState = EGameState.STATE_MAIN_MENU;
 
@@ -123,6 +127,9 @@ public class MainMenu : MonoBehaviour {
         // Scoring
         Score = 0;
         Bonus = m_initialBonusVal;
+
+		// reset time scale
+		Time.timeScale = 1.0f;
     }
 
     private void GameStateUpdate()
@@ -149,7 +156,16 @@ public class MainMenu : MonoBehaviour {
 
             Debug.Log("New wave!");
         }
-    }
+
+		// update UI elements
+		m_textObjects[0].text = m_waveTime.ToString("00.0");
+		m_textObjects[1].text = Score.ToString();
+
+		// poll input
+		if (OVRInput.GetDown(OVRInput.Button.Back)) {
+			m_state = EGameState.STATE_PAUSED;
+		}
+	}
 
     private void GameStateExit()
     {
@@ -190,18 +206,38 @@ public class MainMenu : MonoBehaviour {
         m_textObjects[1].gameObject.SetActive(false);
     }
 
-	/// <summary>
-	/// Is called when green light is pressed
-	/// </summary>
-	public void OnGreenPressed() {
-        // start game
-        m_state = EGameState.STATE_PLAYING;
+	private void PausedInit() 
+	{
+		m_textObjects[0].text = "Quit";
+		m_textObjects[1].text = "Resume";
+		Time.timeScale = 0.0001f;
+	}
+
+	private void PausedUpdate() 
+	{
+		if (OVRInput.GetDown(OVRInput.Button.Back)) {
+			m_state = EGameState.STATE_PLAYING;
+		}
+	}
+
+	private void PausedExit() 
+	{
+		Time.timeScale = 1.0f;
 	}
 
 	/// <summary>
-	/// Is called when red light is called
+	/// Is called when light 0 is called
 	/// </summary>
-	public void OnRedPressed() {
-		Application.Quit();
+	public void OnLight0Pressed() {
+		if (m_state == EGameState.STATE_PAUSED || m_state == EGameState.STATE_MAIN_MENU)
+			Application.Quit();
+	}
+
+	/// <summary>
+	/// Is called when light 1 is pressed
+	/// </summary>
+	public void OnLight1Pressed() {
+		// start game
+		m_state = EGameState.STATE_PLAYING;
 	}
 }
