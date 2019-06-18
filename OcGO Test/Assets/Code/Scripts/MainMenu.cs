@@ -133,7 +133,7 @@ public class MainMenu : MonoBehaviour {
     {
         m_waveTime -= Time.deltaTime;
 
-        if (m_waveTime <= 0.0f)
+        if (m_waveTime <= 0.0f || Input.GetKeyDown(KeyCode.Return))
         {
             ++CurrentWave;
             m_waveTime = m_waveDuration;
@@ -182,7 +182,10 @@ public class MainMenu : MonoBehaviour {
 
     private void GameOverMenuUpdate()
     {
-
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            GameState = EGameState.STATE_MAIN_MENU;
+        }
     }
 
     private void GameOverExit()
