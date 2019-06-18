@@ -4,19 +4,20 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class TrafficLight : MonoBehaviour {
+public class TrafficLight : MonoBehaviour
+{
 
-	[System.Serializable]
-	struct LightMat {
+	public struct LightMat
+    {
 		public Material onMat;
 		public Material offMat;
 	};
 
 	[Tooltip("On and Off materials")]
-	[SerializeField] private LightMat m_mats;
+	[SerializeField] private LightMat m_mats = new LightMat();
 
 	[Tooltip("What happens when traffic light is clicked")]
-	[SerializeField] UnityEvent m_onClicked;
+	[SerializeField] UnityEvent m_onClicked = null;
 
 	private MainMenu m_mainMenu;
 	private bool m_pointedAt;

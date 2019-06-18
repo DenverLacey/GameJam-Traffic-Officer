@@ -6,23 +6,23 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour {
 
     [Header("Traffic Lights")]
-    [SerializeField] private GameObject m_greenLight;
-    [SerializeField] private GameObject m_redLight;
+    [SerializeField] private GameObject m_greenLight = null;
+    [SerializeField] private GameObject m_redLight = null;
 
     [Header("Text Objects")]
-    [SerializeField] private TextMesh[] m_textObjects;
+    [SerializeField] private TextMesh[] m_textObjects = null;
 
     [Tooltip("The amount of score gained when a car has made it through the intersection.")]
-    [SerializeField] private int m_scorePassIncrement;
+    [SerializeField] private int m_scorePassIncrement = 50;
 
     [Tooltip("Initital bonus value.")]
-    [SerializeField] private int m_initialBonusVal;
+    [SerializeField] private int m_initialBonusVal = 1000;
 
     [Tooltip("Amount of bonus lost when a car crashes.")]
-    [SerializeField] private int m_bonusDecrement;
+    [SerializeField] private int m_bonusDecrement = 100;
 
     [Tooltip("Amount of time before a wave ends.")]
-    [SerializeField] private float m_waveDuration;
+    [SerializeField] private float m_waveDuration = 60.0f;
 
     private Material m_greenMat;
     private Material m_redMat;

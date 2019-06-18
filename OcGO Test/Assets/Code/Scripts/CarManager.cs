@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CarManager : MonoBehaviour
 {
-    [System.Serializable]
-    struct Lane
+    public struct Lane
     {
 		public Transform start;
 		public Transform end;
@@ -14,46 +13,46 @@ public class CarManager : MonoBehaviour
 
 	[Header("Manager stuff")]
 	[Tooltip("Minimum spawn delay")]
-	[SerializeField] private float m_minSpawnDelay;
+	[SerializeField] private float m_minSpawnDelay = 1.0f;
 
 	[Tooltip("Maximum spawn delay")]
-	[SerializeField] private float m_maxSpawnDelay;
+	[SerializeField] private float m_maxSpawnDelay = 5.0f;
 
     [Tooltip("Amout the max spawn delay is decremented each spawn.")]
-    [SerializeField] private float m_spawnDelayDecrement;
+    [SerializeField] private float m_spawnDelayDecrement = 0.1f;
 
     [Tooltip("How close the car has to be to the end of the lane to despawn")]
-	[SerializeField] private float m_despawnDistance;
+	[SerializeField] private float m_despawnDistance = 0.1f;
 
     [Tooltip("Chance for two cars to spawn in one go, setting up a collision.")]
     [Range(0.0f, 100.0f)]
-    [SerializeField] private float m_doubleSpawnChance;
+    [SerializeField] private float m_doubleSpawnChance = 40.0f;
 
     [Header("Car Stuff")]
     [Tooltip("The car prefab.")]
-    [SerializeField] private GameObject m_carPrefab;
+    [SerializeField] private GameObject m_carPrefab = null;
 
     [Tooltip("Speed of the cars.")]
-    [SerializeField] private float m_carSpeed;
+    [SerializeField] private float m_carSpeed = 1.0f;
 
     [Tooltip("By how much the car's speed increases")]
-    [SerializeField] private float m_carSpeedIncrease;
+    [SerializeField] private float m_carSpeedIncrease = 0.1f;
 
     [Tooltip("How far away the cars will stop from another car")]
-    [SerializeField] private float m_carStopDistance;
+    [SerializeField] private float m_carStopDistance = 3.0f;
 
     [Tooltip("How long the cars will stay stopped")]
-    [SerializeField] private float m_carStopTime;
+    [SerializeField] private float m_carStopTime = 3.0f;
 
 	[Tooltip("Car Score effect prefab")]
-	[SerializeField] GameObject m_scorePrefab;
+	[SerializeField] GameObject m_scorePrefab = null;
 
     [Header("Lane Stuff")]
     [Tooltip("How many cars per lane object pool")]
-    [SerializeField] private int m_carsPerLane;
+    [SerializeField] private int m_carsPerLane = 3;
 
     [Tooltip("Lane info")]
-    [SerializeField] private Lane[] m_lanes;
+    [SerializeField] private Lane[] m_lanes = null;
 
     Queue<CarActor> m_inactiveCars;
 	List<CarActor> m_activeCars;
