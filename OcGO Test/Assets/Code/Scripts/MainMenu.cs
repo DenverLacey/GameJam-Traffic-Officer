@@ -156,7 +156,7 @@ public class MainMenu : MonoBehaviour {
 
 		// update UI elements
 		m_textObjects[0].text = "Wave " + (CurrentWave + 1).ToString() + ": " + m_waveTime.ToString("00.0");
-		m_textObjects[1].text = Score.ToString();
+		m_textObjects[1].text = "Score: " + Score.ToString();
 
 		// poll input
 		if (OVRInput.GetDown(OVRInput.Button.Back)) {
@@ -177,7 +177,7 @@ public class MainMenu : MonoBehaviour {
 
     private void GameOverMenuInit()
     {
-        Debug.Log("Game over!");
+		m_textObjects[0].text = "Game Over!";
     }
 
     private void GameOverMenuUpdate()
@@ -190,12 +190,13 @@ public class MainMenu : MonoBehaviour {
 
     private void GameOverExit()
     {
-
+		
     }
 
     private void MainMenuInit()
     {
-
+		m_textObjects[0].text = "Quit";
+		m_textObjects[1].text = "Start";
     }
 
     private void MainMenuUpdate()
@@ -247,9 +248,14 @@ public class MainMenu : MonoBehaviour {
 	/// Is called when light 1 is pressed
 	/// </summary>
 	public void OnLight1Pressed() {
-		if (GameState != EGameState.STATE_PLAYING) {
+		if (GameState == EGameState.STATE_MAIN_MENU) {
 			// start game
 			GameState = EGameState.STATE_PLAYING;
+		}
+		else if (GameState == EGameState.STATE_PAUSED) {
+			// resume game
+			m_state = EGameState.STATE_PLAYING;
+			PausedExit();
 		}
 	}
 }
