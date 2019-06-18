@@ -9,8 +9,6 @@ public class CarActor : MonoBehaviour
     public float StopDistance { get; set; }
     public float StopTime { get; set; }
 	public bool HasCrashed { get; private set; }
-
-	private bool m_hasCrossed;
 	public bool HasCrossed { get; set; }
 
     private float m_stopTimer;
@@ -19,9 +17,6 @@ public class CarActor : MonoBehaviour
 
 	private void OnEnable() {
 		HasCrashed = false;
-	}
-
-	private void OnDisable() {
 		HasCrossed = false;
 	}
 

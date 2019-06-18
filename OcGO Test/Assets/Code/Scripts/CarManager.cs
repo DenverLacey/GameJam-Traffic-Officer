@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CarManager : MonoBehaviour
 {
+	[System.Serializable]
     public struct Lane
     {
 		public Transform start;

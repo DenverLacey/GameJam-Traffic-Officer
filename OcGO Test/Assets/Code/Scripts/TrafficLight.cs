@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(MeshRenderer))]
 public class TrafficLight : MonoBehaviour
 {
-
+	[System.Serializable]
 	public struct LightMat
     {
 		public Material onMat;

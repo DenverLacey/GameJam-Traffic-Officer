@@ -480,7 +480,7 @@ MonoBehaviour:
   m_textObjects:
   - {fileID: 1861365189064490358}
   - {fileID: 6398916766096400269}
-  m_scorePassIncrement: 50
+  m_scorePassIncrement: 10
   m_initialBonusVal: 1000
-  m_bonusDecrement: 100
-  m_waveDuration: 60
+  m_bonusDecrement: 5
+  m_waveDuration: 30
