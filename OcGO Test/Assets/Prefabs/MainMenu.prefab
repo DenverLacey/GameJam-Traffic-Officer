@@ -202,7 +202,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6398916766690039516}
-        m_MethodName: OnGreenPressed
+        m_MethodName: OnLight1Pressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -325,7 +325,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6398916766690039516}
-        m_MethodName: OnRedPressed
+        m_MethodName: OnLight0Pressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
