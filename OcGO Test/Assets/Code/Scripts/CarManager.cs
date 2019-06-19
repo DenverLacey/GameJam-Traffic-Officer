@@ -310,6 +310,12 @@ public class CarManager : MonoBehaviour
 		m_inactiveCars.Enqueue(car);
 	}
 
+	/// <summary>
+	/// Activates a score affect for a car that has crossed intersection.
+	/// </summary>
+	/// <param name="car">
+	/// Reference to which car has crossed.
+	/// </param>
 	void ActivateScoreAffect(CarActor car) {
 		GameObject obj = m_inactiveScoreAffects.Dequeue();
 		obj.SetActive(true);
@@ -324,8 +330,20 @@ public class CarManager : MonoBehaviour
 		StartCoroutine(DeactivateScoreAffect(obj, aff.Duration));
 	}
 
-	IEnumerator DeactivateScoreAffect(GameObject obj, float seconds) {
-		yield return new WaitForSeconds(seconds);
+	/// <summary>
+	/// Deactivates a given score affect GameObject after a given amount of delay.
+	/// </summary>
+	/// <param name="obj">
+	/// What object to deactivate.
+	/// </param>
+	/// <param name="delay">'
+	/// The amount of delay, in seconds.
+	/// </param>
+	/// <returns>
+	/// Returns an IEnumerator.
+	/// </returns>
+	IEnumerator DeactivateScoreAffect(GameObject obj, float delay) {
+		yield return new WaitForSeconds(delay);
 		obj.SetActive(false);
 		obj.transform.parent = null;
 		m_activeScoreAffects.Remove(obj);

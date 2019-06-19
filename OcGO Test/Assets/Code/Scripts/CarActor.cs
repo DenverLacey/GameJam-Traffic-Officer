@@ -94,6 +94,12 @@ public class CarActor : MonoBehaviour
         m_stopped = false;
     }
 
+	/// <summary>
+	/// Handles car crashes.
+	/// </summary>
+	/// <param name="other">
+	/// The collider of the object that has been collided with.
+	/// </param>
 	private void OnTriggerEnter(Collider other) {
 		if (other.tag == "Car") {
 			CarActor car = other.GetComponent<CarActor>();

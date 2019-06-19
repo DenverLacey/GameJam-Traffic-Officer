@@ -62,9 +62,6 @@ public class MainMenu : MonoBehaviour {
     private float m_waveTime;
     private float m_intermissionTime;
 
-    private bool m_greenEmissions;
-    private bool m_redEmissions;
-
     public static int Score { get; set; }
     public static int Bonus { get; set; }
 
@@ -265,7 +262,7 @@ public class MainMenu : MonoBehaviour {
     }
 
 	/// <summary>
-	/// Is called when light 0 is called
+	/// Is called when light 0 is pressed
 	/// </summary>
 	public void OnLight0Pressed() {
 		if (GameState != EGameState.STATE_PLAYING) {
@@ -283,6 +280,9 @@ public class MainMenu : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Shows bonus notification and begins animation.
+	/// </summary>
 	void ShowBonus() {
 		foreach (ScoreFX bonus in m_bonusTextBoxes) {
 			bonus.gameObject.SetActive(true);
@@ -297,8 +297,17 @@ public class MainMenu : MonoBehaviour {
 		StartCoroutine(HideBonus(m_bonusTextBoxes[0].Duration));
 	}
 
-	IEnumerator HideBonus(float seconds) {
-		yield return new WaitForSeconds(seconds);
+	/// <summary>
+	/// Deactivates all bonus TextMesh GameObjects and adds bonus to score.
+	/// </summary>
+	/// <param name="delay">
+	/// How delayed the deactivation of the GameObjects is.
+	/// </param>
+	/// <returns>
+	/// Returns an IEnumator.
+	/// </returns>
+	IEnumerator HideBonus(float delay) {
+		yield return new WaitForSeconds(delay);
 		foreach (ScoreFX bonus in m_bonusTextBoxes) {
 			bonus.gameObject.SetActive(false);
 		}

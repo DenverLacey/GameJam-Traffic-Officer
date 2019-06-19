@@ -29,6 +29,9 @@ public class ScoreFX : MonoBehaviour
 		m_text.text = "+" + MainMenu.ScoreIncrement;
 	}
 
+	/// <summary>
+	/// Resets object
+	/// </summary>
 	private void OnEnable() {
 		transform.localScale = new Vector3(0, 0, 0);
 		m_timer = 0.0f;
@@ -37,14 +40,22 @@ public class ScoreFX : MonoBehaviour
 	private void Update() {
 		m_timer += Time.deltaTime;
 		if (m_timer <= Duration * 0.75f) {
+			// expands for first 2 thirds of the duration
 			transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, EndY, transform.position.z), .03f);
 			transform.localScale = Vector3.Lerp(transform.localScale, EndScale, .03f);
 		}
 		else {
+			// shrinks for the rest
 			transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, .07f);
 		}
 	}
 
+	/// <summary>
+	/// Changes the text property of this object's TextMesh
+	/// </summary>
+	/// <param name="text">
+	/// What to change the text to.
+	/// </param>
 	public void SetText(string text) {
 		m_text.text = text;
 	}
