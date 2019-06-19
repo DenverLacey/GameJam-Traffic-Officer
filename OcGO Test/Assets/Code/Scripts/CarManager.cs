@@ -195,7 +195,7 @@ public class CarManager : MonoBehaviour
                 // Car has crashed.
                 m_activeCars[i].Explode();
                 DeactivateCar(m_activeCars[i]);
-                MainMenu.Bonus -= MainMenu.BonusDecrement; // Take from bonus.
+                MainMenu.Bonus = 0; // Remove bonus.
             }
 			else
             {

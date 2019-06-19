@@ -18,9 +18,6 @@ public class MainMenu : MonoBehaviour {
     [Tooltip("Initital bonus value.")]
     [SerializeField] private int m_initialBonusVal = 1000;
 
-    [Tooltip("Amount of bonus lost when a car crashes.")]
-    [SerializeField] private int m_bonusDecrement = 100;
-
     [Tooltip("Amount of time before a wave ends.")]
     [SerializeField] private float m_waveDuration = 60.0f;
 
@@ -46,7 +43,6 @@ public class MainMenu : MonoBehaviour {
     }
 
     public static int ScoreIncrement { get; private set; }
-    public static int BonusDecrement { get; private set; }
     public static int CurrentWave { get; set; }
 
     public enum EGameState
@@ -83,7 +79,6 @@ public class MainMenu : MonoBehaviour {
 		m_redMat = m_redLight.GetComponent<MeshRenderer>().material;
 
         ScoreIncrement = m_scorePassIncrement;
-        BonusDecrement = m_bonusDecrement;
         Bonus = m_initialBonusVal;
 
         m_stateUpdateFuncs = new Dictionary<EGameState, StateFunction>();
@@ -133,10 +128,6 @@ public class MainMenu : MonoBehaviour {
         {
             ++CurrentWave;
             m_waveTime = m_waveDuration;
-
-            // Add bonus to score.
-            Score += Bonus;
-            Bonus = m_initialBonusVal;
 
             if(CurrentWave > 2)
             {

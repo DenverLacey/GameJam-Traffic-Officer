@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(TextMesh))]
+
 public class ScoreFX : MonoBehaviour
 {
 	public float EndY { get; set; }
@@ -13,6 +15,8 @@ public class ScoreFX : MonoBehaviour
 		EndY = 2f;
 		m_timer = 0.0f;
 		m_scale = new Vector3(.1f, .1f, .1f);
+
+        GetComponent<TextMesh>().text = "+" + MainMenu.ScoreIncrement;
 	}
 
 	private void OnEnable() {
