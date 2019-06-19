@@ -178,6 +178,7 @@ public class MainMenu : MonoBehaviour {
     private void GameOverMenuInit()
     {
 		m_textObjects[0].text = "Game Over!";
+        m_textObjects[1].text = "Score: " + Score;
     }
 
     private void GameOverMenuUpdate()
