@@ -53,7 +53,6 @@ public class MainMenu : MonoBehaviour {
     {
         STATE_MAIN_MENU,
         STATE_PLAYING,
-		STATE_PAUSED,
         STATE_GAME_OVER
     }
 
@@ -93,17 +92,14 @@ public class MainMenu : MonoBehaviour {
 
         m_stateUpdateFuncs[EGameState.STATE_MAIN_MENU] = MainMenuUpdate;
         m_stateUpdateFuncs[EGameState.STATE_PLAYING] = GameStateUpdate;
-		m_stateUpdateFuncs[EGameState.STATE_PAUSED] = PausedUpdate;
         m_stateUpdateFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuUpdate;
 
         m_stateInitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuInit;
         m_stateInitFuncs[EGameState.STATE_PLAYING] = GameStateInit;
-		m_stateInitFuncs[EGameState.STATE_PAUSED] = PausedInit;
 		m_stateInitFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuInit;
 
         m_stateExitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuExit;
         m_stateExitFuncs[EGameState.STATE_PLAYING] = GameStateExit;
-		m_stateExitFuncs[EGameState.STATE_PAUSED] = PausedExit;
 		m_stateExitFuncs[EGameState.STATE_GAME_OVER] = GameOverExit;
 
         GameState = EGameState.STATE_MAIN_MENU;
@@ -157,16 +153,6 @@ public class MainMenu : MonoBehaviour {
 		// update UI elements
 		m_textObjects[0].text = "Wave " + (CurrentWave + 1).ToString() + ": " + m_waveTime.ToString("00.0");
 		m_textObjects[1].text = "Score: " + Score.ToString();
-
-		// poll input
-		if (OVRInput.GetDown(OVRInput.Button.Back)) {
-			m_state = EGameState.STATE_PAUSED;
-			PausedInit();
-		}
-		if (Input.GetKeyDown(KeyCode.P)) {
-			m_state = EGameState.STATE_PAUSED;
-			PausedInit();
-		}
 	}
 
     private void GameStateExit()
@@ -212,35 +198,11 @@ public class MainMenu : MonoBehaviour {
 
     }
 
-	private void PausedInit() 
-	{
-		m_textObjects[0].text = "Quit";
-		m_textObjects[1].text = "Resume";
-		Time.timeScale = 0.0001f;
-	}
-
-	private void PausedUpdate() 
-	{
-		if (OVRInput.GetDown(OVRInput.Button.Back)) {
-			m_state = EGameState.STATE_PLAYING;
-			PausedExit();
-		}
-		if (Input.GetKeyDown(KeyCode.Return)) {
-			m_state = EGameState.STATE_PLAYING;
-			PausedExit();
-		}
-	}
-
-	private void PausedExit() 
-	{
-		Time.timeScale = 1.0f;
-	}
-
 	/// <summary>
 	/// Is called when light 0 is called
 	/// </summary>
 	public void OnLight0Pressed() {
-		if (GameState == EGameState.STATE_PAUSED || GameState == EGameState.STATE_MAIN_MENU) {
+		if (GameState != EGameState.STATE_PLAYING) {
 			Application.Quit();
 		}
 	}
@@ -249,14 +211,9 @@ public class MainMenu : MonoBehaviour {
 	/// Is called when light 1 is pressed
 	/// </summary>
 	public void OnLight1Pressed() {
-		if (GameState == EGameState.STATE_MAIN_MENU) {
+		if (GameState != EGameState.STATE_PLAYING) {
 			// start game
 			GameState = EGameState.STATE_PLAYING;
-		}
-		else if (GameState == EGameState.STATE_PAUSED) {
-			// resume game
-			m_state = EGameState.STATE_PLAYING;
-			PausedExit();
 		}
 	}
 }
