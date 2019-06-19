@@ -21,6 +21,9 @@ public class MainMenu : MonoBehaviour {
     [Tooltip("Amount of time before a wave ends.")]
     [SerializeField] private float m_waveDuration = 60.0f;
 
+    [Tooltip("Amount of time before a new wave starts after another ends.")]
+    [SerializeField] private float m_intermissionDuration = 5.0f;
+
     private Material m_greenMat;
     private Material m_redMat;
 
@@ -29,6 +32,7 @@ public class MainMenu : MonoBehaviour {
     private static int m_bonus;
 
     private float m_waveTime;
+    private float m_intermissionTime;
 
     private bool m_greenEmissions;
     private bool m_redEmissions;
@@ -49,6 +53,7 @@ public class MainMenu : MonoBehaviour {
     {
         STATE_MAIN_MENU,
         STATE_PLAYING,
+        STATE_INTERMISSION,
         STATE_GAME_OVER
     }
 
@@ -87,15 +92,18 @@ public class MainMenu : MonoBehaviour {
 
         m_stateUpdateFuncs[EGameState.STATE_MAIN_MENU] = MainMenuUpdate;
         m_stateUpdateFuncs[EGameState.STATE_PLAYING] = GameStateUpdate;
+        m_stateUpdateFuncs[EGameState.STATE_INTERMISSION] = IntermissionUpdate;
         m_stateUpdateFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuUpdate;
 
         m_stateInitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuInit;
         m_stateInitFuncs[EGameState.STATE_PLAYING] = GameStateInit;
-		m_stateInitFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuInit;
+        m_stateInitFuncs[EGameState.STATE_INTERMISSION] = IntermissionInit;
+        m_stateInitFuncs[EGameState.STATE_GAME_OVER] = GameOverMenuInit;
 
         m_stateExitFuncs[EGameState.STATE_MAIN_MENU] = MainMenuExit;
         m_stateExitFuncs[EGameState.STATE_PLAYING] = GameStateExit;
-		m_stateExitFuncs[EGameState.STATE_GAME_OVER] = GameOverExit;
+        m_stateExitFuncs[EGameState.STATE_INTERMISSION] = IntermissionExit;
+        m_stateExitFuncs[EGameState.STATE_GAME_OVER] = GameOverExit;
 
         GameState = EGameState.STATE_MAIN_MENU;
 
@@ -135,10 +143,9 @@ public class MainMenu : MonoBehaviour {
                 return;
             }
 
-            // Reset car manager.
-            m_manager.Reset(true);
-
-            Debug.Log("New wave!");
+            // Enter intermission between waves.
+            GameState = EGameState.STATE_INTERMISSION;
+            return;
         }
 
 		// update UI elements
@@ -150,6 +157,34 @@ public class MainMenu : MonoBehaviour {
     {
         m_manager.Reset(true);
         m_manager.ManagerRunning = false;
+    }
+
+    private void IntermissionInit()
+    {
+        m_textObjects[0].text = "Next wave in: " + m_intermissionDuration + " seconds!";
+        m_textObjects[1].text = "Score: " + Score.ToString();
+
+        m_intermissionTime = m_intermissionDuration;
+    }
+
+    private void IntermissionUpdate()
+    {
+        m_intermissionTime -= Time.deltaTime;
+
+        m_textObjects[0].text = "Next wave in: " + m_intermissionTime + " seconds!";
+
+        if (m_intermissionTime <= 0.0f)
+        {
+            // Set state without the property, since we don't want to reset the game state.
+            m_state = EGameState.STATE_PLAYING;
+            IntermissionExit();
+        }
+    }
+
+    private void IntermissionExit()
+    {
+        Bonus = m_initialBonusVal;
+        m_manager.ManagerRunning = true;
     }
 
     private void GameOverMenuInit()
