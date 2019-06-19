@@ -10,7 +10,7 @@ public class CarManager : MonoBehaviour
 		public Transform start;
 		public Transform end;
 		public Transform crossing;
-        public int carCount;
+        [HideInInspector] public int carCount;
     }
 
 	[Header("Manager stuff")]
