@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_minSpawnDelay: 1
-  m_maxSpawnDelay: 5
+  m_maxSpawnDelay: 3
   m_spawnDelayDecrement: 0.1
   m_waveSpawnDelayDecrement: 1
   m_despawnDistance: 0.1
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_carPrefab: {fileID: 3602153744749924190, guid: 30f617a2f2f091143ba9dbf6c13ae238,
     type: 3}
   m_carSpeed: 5
-  m_carSpeedIncrease: 0.5
+  m_carSpeedIncrease: 0.005
   m_waveCarSpeedIncrease: 2
   m_carStopDistance: 3
   m_carStopTime: 3
@@ -372,7 +372,7 @@ MonoBehaviour:
     type: 3}
   m_explosionPrefab: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1,
     type: 3}
-  m_carsPerLane: 3
+  m_carsPerLane: 5
   m_lanes:
   - start: {fileID: 2257481705748037202}
     end: {fileID: 2257481705441457138}
