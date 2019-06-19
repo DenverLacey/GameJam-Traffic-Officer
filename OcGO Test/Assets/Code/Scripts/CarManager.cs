@@ -114,7 +114,7 @@ public class CarManager : MonoBehaviour
 
 		// create pool for all needed score affects
 		m_inactiveScoreAffects = new Queue<GameObject>();
-		for (int a = 0; a < m_lanes.Length * m_carsPerLane; a++) {
+		for (int a = 0; a < m_lanes.Length * m_carsPerLane * 1.5f; a++) {
 			GameObject affect = Instantiate(m_scorePrefab, transform.position, Quaternion.identity);
 			affect.SetActive(false);
 			m_inactiveScoreAffects.Enqueue(affect);
@@ -225,8 +225,16 @@ public class CarManager : MonoBehaviour
 			ActivateScoreAffect(car);
         }
 
-        if (addScores)
-            MainMenu.Score += m_activeCars.Count * MainMenu.ScoreIncrement;
+		for (int i = 0; i < m_lanes.Length; i++) {
+			m_lanes[i].carCount = 0;
+			if (!m_freeLanes.Contains(i)) {
+				m_freeLanes.Add(i);
+			}
+		}
+
+		if (addScores) {
+			MainMenu.Score += m_activeCars.Count * MainMenu.ScoreIncrement;
+		}
 
         m_activeCars.Clear();
 
@@ -303,11 +311,17 @@ public class CarManager : MonoBehaviour
 	}
 
 	void ActivateScoreAffect(CarActor car) {
-		GameObject affect = m_inactiveScoreAffects.Dequeue();
-		affect.SetActive(true);
-		affect.transform.position = car.transform.position;
-		affect.transform.rotation = Quaternion.LookRotation(car.transform.position.normalized);
-		StartCoroutine(DeactivateScoreAffect(affect, 1.1f));
+		GameObject obj = m_inactiveScoreAffects.Dequeue();
+		obj.SetActive(true);
+		obj.transform.position = car.transform.position;
+		obj.transform.rotation = Quaternion.LookRotation(car.transform.position.normalized);
+
+		ScoreFX aff = obj.GetComponent<ScoreFX>();
+		aff.EndY = car.transform.position.y + 1.0f;
+		aff.EndScale = new Vector3(.1f, .1f, .1f);
+		aff.Duration = 1.1f;
+
+		StartCoroutine(DeactivateScoreAffect(obj, aff.Duration));
 	}
 
 	IEnumerator DeactivateScoreAffect(GameObject obj, float seconds) {

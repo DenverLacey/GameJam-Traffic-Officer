@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6738856424062323169}
   - component: {fileID: 5288115741204356229}
   - component: {fileID: 8904023974788833660}
-  - component: {fileID: 2652260405720926459}
   - component: {fileID: 2827063745308053472}
   m_Layer: 0
   m_Name: Score Notification
@@ -93,22 +92,6 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278243583
---- !u!111 &2652260405720926459
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1087627926524683911}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: dece3ee09879ad047880d63d70897252, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: dece3ee09879ad047880d63d70897252, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &2827063745308053472
 MonoBehaviour:
   m_ObjectHideFlags: 0

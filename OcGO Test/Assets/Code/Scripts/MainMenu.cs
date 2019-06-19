@@ -12,6 +12,12 @@ public class MainMenu : MonoBehaviour {
     [Header("Text Objects")]
     [SerializeField] private TextMesh[] m_textObjects = null;
 
+	[Tooltip("Text Object set aside for bonus")]
+	[SerializeField] private GameObject m_bonusTextObject = null;
+
+	private ScoreFX m_bonusFX;
+	private Vector3 m_resetBonusFXPosition;
+
     [Tooltip("The amount of score gained when a car has made it through the intersection.")]
     [SerializeField] private int m_scorePassIncrement = 50;
 
@@ -38,13 +44,7 @@ public class MainMenu : MonoBehaviour {
     private bool m_redEmissions;
 
     public static int Score { get; set; }
-    public static int Bonus
-    {
-        get { return m_bonus; }
-        set {
-            m_bonus = Mathf.Clamp(m_bonus, 0, int.MaxValue);
-        }
-    }
+    public static int Bonus { get; set; }
 
     public static int ScoreIncrement { get; private set; }
     public static int CurrentWave { get; set; }
@@ -86,6 +86,10 @@ public class MainMenu : MonoBehaviour {
         ScoreIncrement = m_scorePassIncrement;
         Bonus = m_initialBonusVal;
 
+		m_bonusTextObject.SetActive(false);
+		m_bonusFX = m_bonusTextObject.GetComponent<ScoreFX>();
+		m_resetBonusFXPosition = m_bonusTextObject.transform.position;
+
         m_stateUpdateFuncs = new Dictionary<EGameState, StateFunction>();
         m_stateInitFuncs = new Dictionary<EGameState, StateFunction>();
         m_stateExitFuncs = new Dictionary<EGameState, StateFunction>();
@@ -126,6 +130,10 @@ public class MainMenu : MonoBehaviour {
         // Scoring
         Score = 0;
         Bonus = m_initialBonusVal;
+
+		// change ui
+		m_textObjects[0].text = "";
+		m_textObjects[1].text = "";
     }
 
     private void GameStateUpdate()
@@ -149,8 +157,8 @@ public class MainMenu : MonoBehaviour {
         }
 
 		// update UI elements
-		m_textObjects[0].text = "Wave " + (CurrentWave + 1).ToString() + ": " + m_waveTime.ToString("00.0");
-		m_textObjects[1].text = "Score: " + Score.ToString();
+		m_textObjects[2].text = "Wave " + (CurrentWave + 1).ToString() + ": " + m_waveTime.ToString("00.0");
+		m_textObjects[3].text = "Score: " + Score.ToString();
 	}
 
     private void GameStateExit()
@@ -161,17 +169,19 @@ public class MainMenu : MonoBehaviour {
 
     private void IntermissionInit()
     {
-        m_textObjects[0].text = "Next wave in: " + m_intermissionDuration + " seconds!";
-        m_textObjects[1].text = "Score: " + Score.ToString();
+        m_textObjects[2].text = "Next wave in: " + m_intermissionDuration.ToString("0.0") + " seconds!";
 
         m_intermissionTime = m_intermissionDuration;
+
+		ShowBonus();
     }
 
     private void IntermissionUpdate()
     {
         m_intermissionTime -= Time.deltaTime;
 
-        m_textObjects[0].text = "Next wave in: " + m_intermissionTime + " seconds!";
+        m_textObjects[2].text = "Next wave in: " + m_intermissionTime.ToString("0.0") + " seconds!";
+		m_textObjects[3].text = "Score: " + Score;
 
         if (m_intermissionTime <= 0.0f)
         {
@@ -189,16 +199,21 @@ public class MainMenu : MonoBehaviour {
 
     private void GameOverMenuInit()
     {
-		m_textObjects[0].text = "Game Over!";
-        m_textObjects[1].text = "Score: " + Score;
-    }
+		m_textObjects[0].text = "Quit";
+		m_textObjects[1].text = "Restart";
+		m_textObjects[2].text = "Game Over!";
+        m_textObjects[3].text = "Score: " + Score;
+
+		ShowBonus();
+	}
 
     private void GameOverMenuUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            GameState = EGameState.STATE_MAIN_MENU;
+            GameState = EGameState.STATE_PLAYING;
         }
+		m_textObjects[3].text = "Score: " + Score;
     }
 
     private void GameOverExit()
@@ -210,6 +225,8 @@ public class MainMenu : MonoBehaviour {
     {
 		m_textObjects[0].text = "Quit";
 		m_textObjects[1].text = "Start";
+		m_textObjects[2].text = "";
+		m_textObjects[3].text = "";
     }
 
     private void MainMenuUpdate()
@@ -241,5 +258,20 @@ public class MainMenu : MonoBehaviour {
 			// start game
 			GameState = EGameState.STATE_PLAYING;
 		}
+	}
+
+	void ShowBonus() {
+		m_bonusTextObject.SetActive(true);
+		m_bonusTextObject.transform.position = m_resetBonusFXPosition;
+		m_bonusFX.SetText("Bonus: " + Bonus);
+		m_bonusFX.Duration = 3f;
+
+		StartCoroutine(HideBonus(m_bonusFX.Duration));
+	}
+
+	IEnumerator HideBonus(float seconds) {
+		yield return new WaitForSeconds(seconds);
+		m_bonusTextObject.SetActive(false);
+		Score += Bonus;
 	}
 }
