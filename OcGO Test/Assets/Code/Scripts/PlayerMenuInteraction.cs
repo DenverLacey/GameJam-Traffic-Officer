@@ -16,7 +16,7 @@ public class PlayerMenuInteraction : MonoBehaviour {
 	/// </summary>
     void Start() {
 		m_pointerDistance = GetComponent<PlayerActor>().PointerDistance;
-		m_button = GetComponent<PlayerActor>().StopButton;
+		m_button = GetComponent<PlayerActor>().PointerButton;
 		m_laserPointer = GetComponent<LineRenderer>();
     }
 

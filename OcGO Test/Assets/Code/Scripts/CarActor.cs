@@ -77,22 +77,18 @@ public class CarActor : MonoBehaviour
         m_explosionEffect.Play();
     }
 
-    /// <summary>
-    /// Tells car to stop
-    /// </summary>
-    public void Stop()
-    {
-        m_stopped = true;
-        m_stopTimer = 0.0f;
-    }
-
-    /// <summary>
-    /// Tells car it can resume
-    /// </summary>
-    public void Resume()
-    {
-        m_stopped = false;
-    }
+	/// <summary>
+	/// Tells car to stop or resume based on if it is stopped or not.
+	/// </summary>
+	public void ChangeCarState() {
+		if (m_stopped) {
+			m_stopped = false;
+		}
+		else {
+			m_stopped = true;
+			m_stopTimer = 0.0f;
+		}
+	}
 
 	/// <summary>
 	/// Handles car crashes.
