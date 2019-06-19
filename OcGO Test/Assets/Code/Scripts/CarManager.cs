@@ -10,6 +10,7 @@ public class CarManager : MonoBehaviour
 		public Transform start;
 		public Transform end;
 		public Transform crossing;
+        public int carCount = 0;
     }
 
 	[Header("Manager stuff")]
@@ -68,6 +69,8 @@ public class CarManager : MonoBehaviour
 
 	public bool ManagerRunning { get; set; }
 
+    private List<Lane> m_freeLanes = new List<Lane>();
+
     /// <summary>
 	/// Creates object pool for all cars, initialises all variables
 	/// </summary>
@@ -77,6 +80,7 @@ public class CarManager : MonoBehaviour
         m_inactiveCars = new Queue<CarActor>();
         for (int lane = 0; lane < m_lanes.Length; lane++)
         {
+            m_freeLanes.Add(m_lanes[lane]);
             for (int c = 0; c < m_carsPerLane; c++)
             {
                 // create new car object and deactivate it
@@ -236,6 +240,7 @@ public class CarManager : MonoBehaviour
 
 		// get lane from array of lanes
 		Lane lane = m_lanes[laneIndex];
+        lane.carCount++;
 
 		// orient car for journey
 		car.transform.position = lane.start.position;
@@ -255,6 +260,9 @@ public class CarManager : MonoBehaviour
 	/// </param>
 	void DeactivateCar(CarActor car)
     {
+        //decrement car count for car's lane
+        m_lanes[car.Lane].carCount--;
+
 		// remove car from active list
 		m_activeCars.Remove(car);
 
