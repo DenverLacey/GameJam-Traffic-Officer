@@ -20,8 +20,11 @@ public class CarManager : MonoBehaviour
 	[Tooltip("Maximum spawn delay")]
 	[SerializeField] private float m_maxSpawnDelay = 5.0f;
 
-    [Tooltip("Amout the max spawn delay is decremented each spawn.")]
+    [Tooltip("Amount the max spawn delay is decremented each spawn.")]
     [SerializeField] private float m_spawnDelayDecrement = 0.1f;
+
+    [Tooltip("Amount spawn delay is reduced each wave.")]
+    [SerializeField] private float m_waveSpawnDelayDecrement = 1.0f;
 
     [Tooltip("How close the car has to be to the end of the lane to despawn")]
 	[SerializeField] private float m_despawnDistance = 0.1f;
@@ -40,6 +43,9 @@ public class CarManager : MonoBehaviour
     [Tooltip("By how much the car's speed increases")]
     [SerializeField] private float m_carSpeedIncrease = 0.1f;
 
+    [Tooltip("By how much the car's base speed increases each wave")]
+    [SerializeField] private float m_waveCarSpeedIncrease = 2.0f;
+
     [Tooltip("How far away the cars will stop from another car")]
     [SerializeField] private float m_carStopDistance = 3.0f;
 
@@ -48,6 +54,9 @@ public class CarManager : MonoBehaviour
 
 	[Tooltip("Car Score effect prefab")]
 	[SerializeField] GameObject m_scorePrefab = null;
+
+    [Tooltip("Car explosion effect prefab")]
+    [SerializeField] GameObject m_explosionPrefab = null;
 
     [Header("Lane Stuff")]
     [Tooltip("How many cars per lane object pool")]
@@ -95,6 +104,7 @@ public class CarManager : MonoBehaviour
                 car.Lane = -1;
                 car.StopDistance = m_carStopDistance;
                 car.StopTime = m_carStopTime;
+                car.SetExplosionEffect(Instantiate(m_explosionPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>());
 
                 // add car to pool
                 m_inactiveCars.Enqueue(car);
@@ -183,6 +193,7 @@ public class CarManager : MonoBehaviour
             else if(m_activeCars[i].HasCrashed)
             {
                 // Car has crashed.
+                m_activeCars[i].Explode();
                 DeactivateCar(m_activeCars[i]);
                 MainMenu.Bonus -= MainMenu.BonusDecrement; // Take from bonus.
             }
@@ -220,8 +231,8 @@ public class CarManager : MonoBehaviour
         m_activeCars.Clear();
 
         // Reset speed and spawn delay.
-        m_currentCarSpeed = m_carSpeed;
-        m_currentMaxSpawnDelay = m_maxSpawnDelay;
+        m_currentCarSpeed = m_carSpeed + (m_waveCarSpeedIncrease * MainMenu.CurrentWave);
+        m_currentMaxSpawnDelay = m_maxSpawnDelay - (m_waveSpawnDelayDecrement * MainMenu.CurrentWave);
     }
 
 	/// <summary>

@@ -11,6 +11,8 @@ public class CarActor : MonoBehaviour
 	public bool HasCrashed { get; private set; }
 	public bool HasCrossed { get; set; }
 
+    private ParticleSystem m_explosionEffect;
+
     private float m_stopTimer;
     private bool m_stopped;
 	private bool m_waiting;
@@ -54,6 +56,25 @@ public class CarActor : MonoBehaviour
         {
             m_waiting = false;
         }
+    }
+
+    /// <summary>
+    /// Set explosion effect particlesystem instance.
+    /// </summary>
+    /// <param name="effect"></param>
+    public void SetExplosionEffect(ParticleSystem effect)
+    {
+        m_explosionEffect = effect;
+    }
+
+    /// <summary>
+    /// Play the explosion effect.
+    /// </summary>
+    public void Explode()
+    {
+        m_explosionEffect.gameObject.SetActive(true);
+        m_explosionEffect.transform.position = transform.position;
+        m_explosionEffect.Play();
     }
 
     /// <summary>

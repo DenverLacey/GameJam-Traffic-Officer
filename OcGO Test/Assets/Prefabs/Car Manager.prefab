@@ -358,30 +358,38 @@ MonoBehaviour:
   m_minSpawnDelay: 1
   m_maxSpawnDelay: 5
   m_spawnDelayDecrement: 0.1
+  m_waveSpawnDelayDecrement: 1
   m_despawnDistance: 0.1
   m_doubleSpawnChance: 40
   m_carPrefab: {fileID: 3602153744749924190, guid: 30f617a2f2f091143ba9dbf6c13ae238,
     type: 3}
   m_carSpeed: 5
   m_carSpeedIncrease: 0.5
+  m_waveCarSpeedIncrease: 2
   m_carStopDistance: 3
   m_carStopTime: 3
   m_scorePrefab: {fileID: 1087627926524683911, guid: 241700c8b98fbb84e8c0f103431a5e62,
+    type: 3}
+  m_explosionPrefab: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1,
     type: 3}
   m_carsPerLane: 3
   m_lanes:
   - start: {fileID: 2257481705748037202}
     end: {fileID: 2257481705441457138}
     crossing: {fileID: 6655246658029149686}
+    carCount: 0
   - start: {fileID: 2257481707046982635}
     end: {fileID: 2257481707257568407}
     crossing: {fileID: 6513348038889826399}
+    carCount: 0
   - start: {fileID: 2257481706551290501}
     end: {fileID: 2257481706119038048}
     crossing: {fileID: 3593001195817283833}
+    carCount: 0
   - start: {fileID: 2257481705571507356}
     end: {fileID: 2257481705574494129}
     crossing: {fileID: 7858675006611768296}
+    carCount: 0
 --- !u!1 &6975779965245503805
 GameObject:
   m_ObjectHideFlags: 0
