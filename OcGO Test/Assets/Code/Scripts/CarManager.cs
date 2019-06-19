@@ -34,8 +34,8 @@ public class CarManager : MonoBehaviour
     [SerializeField] private float m_doubleSpawnChance = 40.0f;
 
     [Header("Car Stuff")]
-    [Tooltip("The car prefab.")]
-    [SerializeField] private GameObject m_carPrefab = null;
+    [Tooltip("All Car prefabs.")]
+    [SerializeField] private GameObject[] m_carPrefabs = null;
 
     [Tooltip("Speed of the cars.")]
     [SerializeField] private float m_carSpeed = 1.0f;
@@ -93,7 +93,7 @@ public class CarManager : MonoBehaviour
             for (int c = 0; c < m_carsPerLane; c++)
             {
                 // create new car object and deactivate it
-                GameObject cobj = Instantiate(m_carPrefab, transform.position, Quaternion.identity);
+                GameObject cobj = Instantiate(m_carPrefabs[Random.Range(0, m_carPrefabs.Length)], transform.position, Quaternion.identity);
                 cobj.SetActive(false);
 
                 m_currentCarSpeed = m_carSpeed;
@@ -199,9 +199,12 @@ public class CarManager : MonoBehaviour
             }
 			else
             {
+				// calculate how close the car is to crossing
+				float carDist = (m_activeCars[i].transform.position - m_lanes[m_activeCars[i].Lane].start.position).sqrMagnitude;
+				float laneDist = (m_lanes[m_activeCars[i].Lane].crossing.position - m_lanes[m_activeCars[i].Lane].start.position).sqrMagnitude;
+
 				// if car has made it to crossing
-				if ((m_lanes[m_activeCars[i].Lane].crossing.position - m_activeCars[i].transform.position).sqrMagnitude <= m_despawnDistance * m_despawnDistance &&
-					!m_activeCars[i].HasCrossed) 
+				if (carDist >= laneDist && !m_activeCars[i].HasCrossed) 
 				{
 					MainMenu.Score += MainMenu.ScoreIncrement;
 					m_activeCars[i].HasCrossed = true;
