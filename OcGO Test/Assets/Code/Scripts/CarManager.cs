@@ -10,7 +10,7 @@ public class CarManager : MonoBehaviour
 		public Transform start;
 		public Transform end;
 		public Transform crossing;
-        public int carCount = 0;
+        public int carCount;
     }
 
 	[Header("Manager stuff")]
@@ -69,7 +69,7 @@ public class CarManager : MonoBehaviour
 
 	public bool ManagerRunning { get; set; }
 
-    private List<Lane> m_freeLanes = new List<Lane>();
+    private List<int> m_freeLanes = new List<int>();
 
     /// <summary>
 	/// Creates object pool for all cars, initialises all variables
@@ -80,7 +80,7 @@ public class CarManager : MonoBehaviour
         m_inactiveCars = new Queue<CarActor>();
         for (int lane = 0; lane < m_lanes.Length; lane++)
         {
-            m_freeLanes.Add(m_lanes[lane]);
+            m_freeLanes.Add(lane);
             for (int c = 0; c < m_carsPerLane; c++)
             {
                 // create new car object and deactivate it
@@ -104,7 +104,7 @@ public class CarManager : MonoBehaviour
 
 		// create pool for all needed score affects
 		m_inactiveScoreAffects = new Queue<GameObject>();
-		for (int a = 0; a < 8; a++) {
+		for (int a = 0; a < m_lanes.Length * m_carsPerLane; a++) {
 			GameObject affect = Instantiate(m_scorePrefab, transform.position, Quaternion.identity);
 			affect.SetActive(false);
 			m_inactiveScoreAffects.Enqueue(affect);
@@ -138,32 +138,38 @@ public class CarManager : MonoBehaviour
             float doubleSpawnVal = Random.Range(0.0f, 100.0f);
 
             // Pick random lane.
-            int randLane = Random.Range(0, m_lanes.Length);
+            // int randLane = Random.Range(0, m_lanes.Length);
 
-            if (doubleSpawnVal < m_doubleSpawnChance) // Spawn two cars.
-            {
-                ActivateCarInLane(randLane);
+			if (m_freeLanes.Count > 0 &&
+				m_inactiveCars.Count > 0) 
+			{
+				int randLane = m_freeLanes[Random.Range(0, m_freeLanes.Count)];
 
-                randLane += 2;
+				if (doubleSpawnVal < m_doubleSpawnChance) // Spawn two cars.
+				{
+					ActivateCarInLane(randLane);
 
-                randLane %= m_lanes.Length;
+					randLane += 2;
 
-                ActivateCarInLane(randLane);
-            }
-            else // Spawn one car.
-            {
-                ActivateCarInLane(randLane);
-            }
+					randLane %= m_lanes.Length;
 
-            // Set new spawn speed.
-            m_currentCarSpeed += m_carSpeedIncrease;
+					ActivateCarInLane(randLane);
+				}
+				else // Spawn one car.
+				{
+					ActivateCarInLane(randLane);
+				}
 
-            // Set new max spawn delay.
-            m_currentMaxSpawnDelay = Mathf.Clamp(m_currentMaxSpawnDelay - m_spawnDelayDecrement, m_minSpawnDelay, m_maxSpawnDelay);
+				// Set new spawn speed.
+				m_currentCarSpeed += m_carSpeedIncrease;
 
-            // reset timers and delays
-            m_currentSpawnDelay = Random.Range(m_minSpawnDelay, m_currentMaxSpawnDelay);
-			m_spawnTimer = 0.0f;
+				// Set new max spawn delay.
+				m_currentMaxSpawnDelay = Mathf.Clamp(m_currentMaxSpawnDelay - m_spawnDelayDecrement, m_minSpawnDelay, m_maxSpawnDelay);
+
+				// reset timers and delays
+				m_currentSpawnDelay = Random.Range(m_minSpawnDelay, m_currentMaxSpawnDelay);
+				m_spawnTimer = 0.0f;
+			}
 		}
 
 		// deactivate cars that have made it across intersection
@@ -239,12 +245,16 @@ public class CarManager : MonoBehaviour
         car.Speed = m_currentCarSpeed;
 
 		// get lane from array of lanes
-		Lane lane = m_lanes[laneIndex];
-        lane.carCount++;
+		m_lanes[laneIndex].carCount++;
+
+		// remove full lane from free lanes
+		if (m_lanes[laneIndex].carCount >= m_carsPerLane) {
+			m_freeLanes.Remove(laneIndex);
+		}
 
 		// orient car for journey
-		car.transform.position = lane.start.position;
-		Vector3 dir = (lane.end.position - lane.start.position).normalized;
+		car.transform.position = m_lanes[laneIndex].start.position;
+		Vector3 dir = (m_lanes[laneIndex].end.position - m_lanes[laneIndex].start.position).normalized;
 		car.transform.forward = dir;
 
 		// activate car
@@ -262,6 +272,14 @@ public class CarManager : MonoBehaviour
     {
         //decrement car count for car's lane
         m_lanes[car.Lane].carCount--;
+		m_lanes[car.Lane].carCount = Mathf.Clamp(m_lanes[car.Lane].carCount, 0, int.MaxValue);
+
+		// add available lane to free lanes
+		if (m_lanes[car.Lane].carCount < m_carsPerLane &&
+			!m_freeLanes.Contains(car.Lane)) 
+		{
+			m_freeLanes.Add(car.Lane);
+		}
 
 		// remove car from active list
 		m_activeCars.Remove(car);
