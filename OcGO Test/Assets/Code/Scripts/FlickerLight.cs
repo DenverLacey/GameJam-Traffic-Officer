@@ -22,11 +22,17 @@ public class FlickerLight : MonoBehaviour
     void Start()
     {
 		m_renderer = GetComponent<MeshRenderer>();
+        if (!m_renderer) Debug.LogError("No MeshRenderer Component!", this);
+
 		m_timer = 0.0f;
 		m_on = false;
 
-		m_renderer.materials[0] = m_offMat;
-		m_renderer.materials[1] = m_offMat;
+        m_renderer.materials = new Material[]
+        {
+            m_offMat,
+            m_offMat,
+            m_renderer.materials[2]
+        };
     }
 
     // Update is called once per frame
@@ -37,15 +43,23 @@ public class FlickerLight : MonoBehaviour
 		if (m_timer < m_flickerSpeed) return;
 
 		if (m_on) {
-			m_renderer.materials[0] = m_offMat;
-			m_renderer.materials[1] = m_offMat;
+            m_renderer.materials = new Material[]
+            {
+                m_offMat,
+                m_offMat,
+                m_renderer.materials[2]
+            };
 
-			m_on = false;
+            m_on = false;
 			m_timer = 0.0f;
 		}
 		else {
-			m_renderer.materials[0] = m_onMat;
-			m_renderer.materials[1] = m_onMat;
+			m_renderer.materials = new Material[]
+            {
+                m_onMat,
+                m_onMat,
+                m_renderer.materials[2]
+            };
 
 			m_on = true;
 			m_timer = 0.0f;
