@@ -7,11 +7,8 @@ public class PlayerActor : MonoBehaviour {
 	[Tooltip("Explosion Prefab")]
 	[SerializeField] GameObject m_explosionPrefab;
 
-	[Tooltip("Button to tell a car to stop")]
+	[Tooltip("Button to tell a car to stop and go")]
 	[SerializeField] private OVRInput.Button m_pointerButton = OVRInput.Button.PrimaryIndexTrigger;
-
-	[Tooltip("Button to tell a car to go")]
-	[SerializeField] private OVRInput.Button m_goButton = OVRInput.Button.PrimaryTouchpad;
 
 	[Tooltip("MAximum distance of pointer raycast")]
 	private float m_pointerDistance = 100f;

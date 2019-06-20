@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class CarActor : MonoBehaviour
 {
     public float Speed { get; set; }
@@ -17,7 +18,14 @@ public class CarActor : MonoBehaviour
     private bool m_stopped;
 	private bool m_waiting;
 
-	private void OnEnable() {
+    private Collider m_collider;
+
+    private void Start()
+    {
+        m_collider = GetComponent<Collider>();
+    }
+
+    private void OnEnable() {
 		HasCrashed = false;
 		HasCrossed = false;
 	}
@@ -43,7 +51,7 @@ public class CarActor : MonoBehaviour
 		}
 
         // stop car if about to collide with car in same lane
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, StopDistance))
+        if (Physics.Raycast(transform.position + transform.forward + Vector3.up, transform.forward, out RaycastHit hit, m_collider.bounds.size.z + StopDistance))
         {
             if (hit.collider.tag == "Car")
             {

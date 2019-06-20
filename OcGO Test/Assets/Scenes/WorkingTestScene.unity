@@ -20069,7 +20069,7 @@ PrefabInstance:
     - target: {fileID: 942521044603110132, guid: 228c1e0e6e4e57748bc7fc32be5d5c73,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.192
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 942521044603110132, guid: 228c1e0e6e4e57748bc7fc32be5d5c73,
         type: 3}
@@ -20268,7 +20268,7 @@ PrefabInstance:
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
       propertyPath: m_minSpawnDelay
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
@@ -20278,7 +20278,7 @@ PrefabInstance:
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
       propertyPath: m_carsPerLane
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
@@ -20303,6 +20303,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4146692125014246427, guid: 6bf64c4dcbd671944aa0452668965ba6,
         type: 3}
+    - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
+        type: 3}
+      propertyPath: m_carStopDistance
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2257481705748037202, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
       propertyPath: m_LocalRotation.y
