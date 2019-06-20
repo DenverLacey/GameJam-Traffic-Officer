@@ -114,6 +114,7 @@ public class CarActor : MonoBehaviour
 				// collision occured
 				car.HasCrashed = true;
 				HasCrashed = true;
+				MainMenu.Bonus -= MainMenu.BonusDecrement;
 			}
 			else {
 				// wait if car is ahead but colliding

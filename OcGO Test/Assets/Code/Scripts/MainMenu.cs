@@ -46,6 +46,9 @@ public class MainMenu : MonoBehaviour {
     [Tooltip("Initital bonus value.")]
     [SerializeField] private int m_initialBonusVal = 1000;
 
+	[Tooltip("How much bonus is reduced each car crash.")]
+	[SerializeField] private int m_bonusPenalty = 50;
+
     [Tooltip("Amount of time before a wave ends.")]
     [SerializeField] private float m_waveDuration = 60.0f;
 
@@ -63,9 +66,10 @@ public class MainMenu : MonoBehaviour {
     private float m_intermissionTime;
 
     public static int Score { get; set; }
-    public static int Bonus { get; set; }
+	public static int Bonus { get => m_bonus; set => m_bonus = (value < 0 ? 0 : value); }
 
     public static int ScoreIncrement { get; private set; }
+	public static int BonusDecrement { get; private set; }
     public static int CurrentWave { get; set; }
 
     public enum EGameState
@@ -104,6 +108,7 @@ public class MainMenu : MonoBehaviour {
 
         ScoreIncrement = m_scorePassIncrement;
         Bonus = m_initialBonusVal;
+		BonusDecrement = m_bonusPenalty;
 
 		foreach(ScoreFX sfx in m_bonusTextBoxes) {
 			sfx.gameObject.SetActive(false);

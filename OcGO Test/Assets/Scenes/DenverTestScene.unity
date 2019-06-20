@@ -727,6 +727,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4146692125014246427, guid: 6bf64c4dcbd671944aa0452668965ba6,
         type: 3}
+    - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
+        type: 3}
+      propertyPath: m_carsPerLane
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 138c0dcbfe70d6147bf9654bbc3fb880, type: 3}
 --- !u!1 &840679866

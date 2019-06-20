@@ -1482,6 +1482,7 @@ MonoBehaviour:
   - {fileID: 2082011791}
   m_scorePassIncrement: 10
   m_initialBonusVal: 1000
+  m_bonusPenalty: 25
   m_waveDuration: 30
   m_intermissionDuration: 5
 --- !u!1 &7196115333697653805
