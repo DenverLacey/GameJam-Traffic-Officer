@@ -58,6 +58,6 @@ public class PlayerActor : MonoBehaviour {
 		GameObject exp = Instantiate(m_explosionPrefab, expPos, Quaternion.identity);
 
 		// schedule explosion object for destruction
-		Destroy(exp, 5);
+		Destroy(exp, 4);
 	}
 }
