@@ -46,4 +46,8 @@ public class PlayerMenuInteraction : MonoBehaviour {
 			m_laserPointer.SetPositions(new Vector3[] { transform.position, laserEnd });
 		}
 	}
+
+	public void ActivateDeathLaser() {
+		m_laserPointer.startColor = Color.red;
+	}
 }
