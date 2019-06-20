@@ -41,6 +41,7 @@ ModelImporter:
     2300014: polySurface4
     2300016: polySurface5
     2300018: pCube18
+    2300020: Car_Fast
     3300000: pCube10
     3300002: pCube11
     3300004: pCube12
@@ -51,6 +52,7 @@ ModelImporter:
     3300014: polySurface4
     3300016: polySurface5
     3300018: pCube18
+    3300020: Car_Fast
     4300000: polySurface5
     4300002: polySurface4
     4300004: pCube10
@@ -61,6 +63,7 @@ ModelImporter:
     4300014: pCube12
     4300016: pCube11
     4300018: pCube18
+    4300020: Car_Fast
   externalObjects: {}
   materials:
     importMaterials: 1
