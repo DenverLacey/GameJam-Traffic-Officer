@@ -63,6 +63,7 @@
     <Compile Include="Assets\Code\Scripts\CarActor.cs" />
     <Compile Include="Assets\Code\Scripts\CarData.cs" />
     <Compile Include="Assets\Code\Scripts\CarManager.cs" />
+    <Compile Include="Assets\Code\Scripts\FlickerLight.cs" />
     <Compile Include="Assets\Code\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Code\Scripts\PlayerActor.cs" />
     <Compile Include="Assets\Code\Scripts\PlayerMenuInteraction.cs" />

@@ -172,6 +172,7 @@ public class MainMenu : MonoBehaviour {
 
             if(CurrentWave > 2)
             {
+                CurrentWave = 0;
                 GameState = EGameState.STATE_GAME_OVER;
                 return;
             }
