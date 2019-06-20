@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(BoxCollider))]
 public class CarActor : MonoBehaviour
 {
     public float Speed { get; set; }
@@ -11,6 +11,8 @@ public class CarActor : MonoBehaviour
     public float StopTime { get; set; }
 	public bool HasCrashed { get; private set; }
 	public bool HasCrossed { get; set; }
+	
+	CarManager m_manager;
 
     private ParticleSystem m_explosionEffect;
 
@@ -22,7 +24,8 @@ public class CarActor : MonoBehaviour
 
     private void Start()
     {
-        m_collider = GetComponent<Collider>();
+        m_collider = GetComponent<BoxCollider>();
+		m_manager = FindObjectOfType<CarManager>();
     }
 
     private void OnEnable() {
@@ -111,6 +114,15 @@ public class CarActor : MonoBehaviour
 				// collision occured
 				car.HasCrashed = true;
 				HasCrashed = true;
+			}
+			else {
+				// wait if car is ahead but colliding
+				float myDistToEnd = (m_manager.Lanes[Lane].end.position - transform.position).sqrMagnitude;
+				float otherDistToEnd = (m_manager.Lanes[Lane].end.position - other.transform.position).sqrMagnitude;
+				if (myDistToEnd > otherDistToEnd) {
+					m_stopped = true;
+					m_stopTimer = StopTime - 0.5f;
+				}
 			}
 		}
 	}

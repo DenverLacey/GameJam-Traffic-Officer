@@ -64,6 +64,7 @@ public class CarManager : MonoBehaviour
 
     [Tooltip("Lane info")]
     [SerializeField] private Lane[] m_lanes = null;
+	public Lane[] Lanes { get => m_lanes; }
 
     Queue<CarActor> m_inactiveCars;
 	List<CarActor> m_activeCars;
