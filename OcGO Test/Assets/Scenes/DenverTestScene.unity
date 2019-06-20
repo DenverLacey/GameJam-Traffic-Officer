@@ -713,19 +713,19 @@ PrefabInstance:
         type: 3}
       propertyPath: m_carPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 7665382623689158397, guid: 7ecf5e57a9ebc9543a0183659091f20a,
+      objectReference: {fileID: 8540430969863417156, guid: 7ecf5e57a9ebc9543a0183659091f20a,
         type: 3}
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
       propertyPath: m_carPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 870921267384361266, guid: be19f063bd04d0e4aa4c60e4ede8d698,
+      objectReference: {fileID: 2488054059845063970, guid: be19f063bd04d0e4aa4c60e4ede8d698,
         type: 3}
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
       propertyPath: m_carPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 4146692125014246427, guid: 6bf64c4dcbd671944aa0452668965ba6,
+      objectReference: {fileID: 9166448605411973415, guid: 7ed9e0a52b25d8b43ba80964adac209a,
         type: 3}
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
@@ -1204,6 +1204,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 942521043983447127, guid: 228c1e0e6e4e57748bc7fc32be5d5c73,
+        type: 3}
+      propertyPath: m_explosionPrefab
+      value: 
+      objectReference: {fileID: 1000011797152326, guid: acf39d9f4addf294d93fa56fa373961b,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 228c1e0e6e4e57748bc7fc32be5d5c73, type: 3}
 --- !u!33 &3175644707783939506

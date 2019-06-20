@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 [RequireComponent(typeof(PlayerMenuInteraction))]
@@ -18,6 +20,18 @@ public class PlayerActor : MonoBehaviour {
 
 	private bool m_deathLaser;
 
+	// explosion pool
+	private Queue<GameObject> m_explosionQueue;
+
+	private void Start() {
+		m_explosionQueue = new Queue<GameObject>();
+		for (int i = 0; i < 20; i++) {
+			GameObject exp = Instantiate(m_explosionPrefab, transform.position, Quaternion.identity);
+			exp.SetActive(false);
+			m_explosionQueue.Enqueue(exp);
+		}
+	}
+
 	/// <summary>
 	/// Responds to player input and updates line renderer effect.
 	/// </summary>
@@ -31,7 +45,7 @@ public class PlayerActor : MonoBehaviour {
 				
 				// poiting at building
 				else if (hit.collider.tag == "Building" && m_deathLaser)
-					BlowUpBuilding(hit.collider.gameObject);
+					ActivateExplosion(hit.collider.gameObject);
 
 				// poiting at easter egg
 				else if (hit.collider.tag == "EasterEgg" && !m_deathLaser) {
@@ -42,7 +56,7 @@ public class PlayerActor : MonoBehaviour {
 		}
 	}
 
-	void BlowUpBuilding(GameObject building) {
+	void ActivateExplosion(GameObject building) {
 		// deactivate building
 		building.SetActive(false);
 
@@ -52,9 +66,18 @@ public class PlayerActor : MonoBehaviour {
 			0,
 			building.transform.position.z
 		);
-		GameObject exp = Instantiate(m_explosionPrefab, expPos, Quaternion.identity);
+
+		GameObject exp = m_explosionQueue.Dequeue();
+		exp.transform.position = expPos;
+		exp.SetActive(true);
 
 		// schedule explosion object for destruction
-		Destroy(exp, 3);
+		StartCoroutine(DeactivateExplosion(exp, 3));
+	}
+
+	IEnumerator DeactivateExplosion(GameObject explosion, float delay) {
+		yield return new WaitForSeconds(delay);
+		explosion.SetActive(false);
+		m_explosionQueue.Enqueue(explosion);
 	}
 }
