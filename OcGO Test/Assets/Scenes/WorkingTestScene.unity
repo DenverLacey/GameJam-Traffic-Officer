@@ -20105,12 +20105,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 942521043983447127, guid: 228c1e0e6e4e57748bc7fc32be5d5c73,
-        type: 3}
-      propertyPath: m_explosionPrefab
-      value: 
-      objectReference: {fileID: 6545092564519865425, guid: 6c91b7df5228ed343b4e47922fc948b2,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 228c1e0e6e4e57748bc7fc32be5d5c73, type: 3}
 --- !u!1001 &989080989007907262
@@ -20285,7 +20279,7 @@ PrefabInstance:
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}
       propertyPath: m_carStopDistance
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2257481707372928774, guid: 138c0dcbfe70d6147bf9654bbc3fb880,
         type: 3}

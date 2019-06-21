@@ -13,7 +13,7 @@ public class PlayerActor : MonoBehaviour {
 	[SerializeField] private OVRInput.Button m_pointerButton = OVRInput.Button.PrimaryIndexTrigger;
 
 	[Tooltip("MAximum distance of pointer raycast")]
-	private float m_pointerDistance = 100f;
+	[SerializeField] private float m_pointerDistance = 200f;
 
 	public float PointerDistance { get => m_pointerDistance; }
 	public OVRInput.Button PointerButton { get => m_pointerButton; }
@@ -21,13 +21,13 @@ public class PlayerActor : MonoBehaviour {
 	private bool m_deathLaser;
 
 	// explosion pool
-	private Queue<GameObject> m_explosionQueue;
+	private Queue<ParticleSystem> m_explosionQueue;
 
 	private void Start() {
-		m_explosionQueue = new Queue<GameObject>();
+		m_explosionQueue = new Queue<ParticleSystem>();
 		for (int i = 0; i < 20; i++) {
-			GameObject exp = Instantiate(m_explosionPrefab, transform.position, Quaternion.identity);
-			exp.SetActive(false);
+            ParticleSystem exp = Instantiate(m_explosionPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+			exp.gameObject.SetActive(false);
 			m_explosionQueue.Enqueue(exp);
 		}
 	}
@@ -67,17 +67,18 @@ public class PlayerActor : MonoBehaviour {
 			building.transform.position.z
 		);
 
-		GameObject exp = m_explosionQueue.Dequeue();
+		ParticleSystem exp = m_explosionQueue.Dequeue();
 		exp.transform.position = expPos;
-		exp.SetActive(true);
+		exp.gameObject.SetActive(true);
+        exp.Play();
 
 		// schedule explosion object for destruction
-		StartCoroutine(DeactivateExplosion(exp, 3));
+		StartCoroutine(DeactivateExplosion(exp, exp.main.duration));
 	}
 
-	IEnumerator DeactivateExplosion(GameObject explosion, float delay) {
+	IEnumerator DeactivateExplosion(ParticleSystem explosion, float delay) {
 		yield return new WaitForSeconds(delay);
-		explosion.SetActive(false);
+		explosion.gameObject.SetActive(false);
 		m_explosionQueue.Enqueue(explosion);
 	}
 }
