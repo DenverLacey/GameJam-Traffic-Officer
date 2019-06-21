@@ -105,7 +105,9 @@ public class CarManager : MonoBehaviour
                 car.Lane = -1;
                 car.StopDistance = m_carStopDistance;
                 car.StopTime = m_carStopTime;
-                car.SetExplosionEffect(Instantiate(m_explosionPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>());
+				ParticleSystem ps = Instantiate(m_explosionPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+				ps.gameObject.SetActive(false);
+				car.SetExplosionEffect(ps);
 
                 // add car to pool
                 m_inactiveCars.Enqueue(car);
