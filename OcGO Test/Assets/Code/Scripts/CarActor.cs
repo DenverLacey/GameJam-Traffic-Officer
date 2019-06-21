@@ -122,8 +122,17 @@ public class CarActor : MonoBehaviour
 				float otherDistToEnd = (m_manager.Lanes[Lane].end.position - other.transform.position).sqrMagnitude;
 				if (myDistToEnd > otherDistToEnd) {
 					m_stopped = true;
-					m_stopTimer = StopTime - 0.5f;
+					m_stopTimer = float.MaxValue;
 				}
+			}
+		}
+	}
+
+	private void OnTriggerExit(Collider other) {
+		if (other.tag == "Car") {
+			CarActor car = other.GetComponent<CarActor>();
+			if (car.Lane == Lane) {
+				m_stopTimer = 0.1f;
 			}
 		}
 	}
